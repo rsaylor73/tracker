@@ -406,6 +406,7 @@ class projects_functions extends reports_functions {
 			$Date = $this->linkID->escape_string($dot->Date);
 			$Creation_Date = $this->linkID->escape_string($dot->Creation_Date);
 			$Comments = $this->linkID->escape_string($dot->Comments);
+			$Category = $this->linkID->escape_string($dot->Category);
 			$Comment_Type = $this->linkID->escape_string($dot->Comment_Type);
 			$Discipline = $this->linkID->escape_string($dot->Discipline);
 			$Importance = $this->linkID->escape_string($dot->Importance);
@@ -413,10 +414,10 @@ class projects_functions extends reports_functions {
 
 			$sql = "INSERT INTO `xml_data` 
 			(`projectID`,`Page_Label`,`Page_Index`,`Author`,`Date`,`Creation_Date`,
-			`Comments`,`Comment_Type`,`Discipline`,`Importance`,`Cost_Reduction`)
+			`Category`,`Comments`,`Comment_Type`,`Discipline`,`Importance`,`Cost_Reduction`)
 			VALUES
 			('$projectID','$Page_Label','$Page_Index','$Author','$Date','$Creation_Date',
-			'$Comments','$Comment_Type','$Discipline','$Importance','$Cost_Reduction')
+			'$Category','$Comments','$Comment_Type','$Discipline','$Importance','$Cost_Reduction')
 			";
 			$result = $this->new_mysql($sql);
 		}
