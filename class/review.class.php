@@ -54,6 +54,120 @@ class review_functions extends admin_functions {
 	public function viewreview() {
 		$this->check_permissions('review');
 
+		if ($_GET['projectID'] != "") {
+			$projectID = $_GET['projectID'];
+		}
+		if ($_POST['projectID'] != "") {
+			$projectID = $_POST['projectID'];
+		}
+
+		if ($_POST['Page_Label'] != "") {
+			$s="1";
+			$Page_Label = "AND `x`.`Page_Label` LIKE '%$_POST[Page_Label]%'";
+		}
+		if ($_POST['Page_Index'] != "") {
+			$s="1";
+			$Page_Index = "AND `x`.`Page_Index` LIKE '%$_POST[Page_Index]%'";
+		}
+		if ($_POST['Author'] != "") {
+			$s="1";
+			$Author = "AND `x`.`Author` LIKE '%$_POST[Author]%'";
+		}
+		if ($_POST['Date'] != "") {
+			$s="1";
+			$Date = "AND `x`.`Date` LIKE '%$_POST[Date]%'";
+		}
+		if ($_POST['Creation_Date'] != "") {
+			$s="1";
+			$Creation_Date = "AND `x`.`Creation_Date` LIKE '%$_POST[Creation_Date]%'";
+		}
+		if ($_POST['Comments'] != "") {
+			$s="1";
+			$Comments = "AND `x`.`Comments` LIKE '%$_POST[Comments]%'";
+		}
+		if ($_POST['Category'] != "") {
+			$s="1";
+			$Category = "AND `x`.`Category` LIKE '%$_POST[Category]%'";
+		}
+		if ($_POST['Comment_Type'] != "") {
+			$s="1";
+			$Comment_Type = "AND `x`.`Comment_Type` LIKE '%$_POST[Comment_Type]%'";
+		}
+		if ($_POST['Discipline'] != "") {
+			$s="1";
+			$Discipline = "AND `x`.`Discipline` LIKE '%$_POST[Discipline]%'";
+		}
+		if ($_POST['Importance'] != "") {
+			$s="1";
+			$Importance = "AND `x`.`Importance` LIKE '%$_POST[Importance]%'";
+		}
+		if ($_POST['Cost_Reduction'] != "") {
+			$s="1";
+			$Cost_Reduction = "AND `x`.`Cost_Reduction` LIKE '%$_POST[Cost_Reduction]%'";
+		}
+
+		switch ($_GET['field']) {
+
+			case "Page_Label":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Page_Index":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Author":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Date":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Creation_Date":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Comments":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Category":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Comment_Type":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Discipline":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Importance":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+			case "Cost_Reduction":
+				$order = "ORDER BY `x`.`$_GET[field]` $_GET[direction]";
+				$url2 = "/$_GET[field]/$_GET[direction]";
+			break;
+
+
+			default:
+			$order = "ORDER BY `x`.`Date` ASC, `x`.`Category` ASC";
+			break;
+		}
 		// ANSI 92
 		$sql = "
 		SELECT
@@ -82,21 +196,39 @@ class review_functions extends admin_functions {
 		LEFT JOIN `SubmittalTypes` s ON `p`.`submittalID` = `s`.`id`
 
 		WHERE
-			`x`.`projectID` = '$_GET[projectID]'
+			1
+			AND `x`.`projectID` = '$projectID'
+			$Page_Label
+			$Page_Index
+			$Author
+			$Date
+			$Creation_Date
+			$Comments
+			$Category
+			$Comment_Type
+			$Discipline
+			$Importance
+			$Cost_Reduction
 
-		ORDER BY `x`.`Date` ASC, `x`.`Category` ASC
+
+
+		$order
 		";
 
+		//print "$sql<br>";
+
         // page numbers
-        $url = "/viewreview/$_GET[projectID]/pages/";
-        $show_pages = $this->page_numbers($sql,$url);
-        if ($_GET['stop'] == "") {
-            $stop = "0";
-        } else {
-            $stop = $_GET['stop'];
-        }
-        $sql .= " LIMIT $stop,20";
-		$data['page_numbers'] = $show_pages;
+        if ($s!="1") {
+        	$url = "/viewreview/$projectID/pages/";
+	        $show_pages = $this->page_numbers($sql,$url,$url2);
+	        if ($_GET['stop'] == "") {
+	            $stop = "0";
+	        } else {
+	            $stop = $_GET['stop'];
+	        }
+	        $sql .= " LIMIT $stop,20";
+			$data['page_numbers'] = $show_pages;
+		}
         
 
 		$result = $this->new_mysql($sql);

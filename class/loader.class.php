@@ -67,7 +67,7 @@ class loader extends projects_functions {
     }
 
     /* This is used with the page numbers in the admin */
-        public function page_numbers($sql,$url) {
+        public function page_numbers($sql,$url,$url2='') {
                 $max = "20";
                 $result = $this->new_mysql($sql);
                 $total_records = $result->num_rows;
@@ -82,28 +82,31 @@ class loader extends projects_functions {
                         $html = "<div class=\"btn-group\" role=\"group\" aria-label=\"...\">";
                         $html .= "<button type=\"button\" class=\"btn btn-default\" disabled>Page</button>";
                         if ($page == "1") {
-                                $html .= "<button type=\"button\" class=\"btn btn-primary\" onclick=\"document.location.href='".$url.$page."/0'\">1</button>";
+                                $html .= "<button type=\"button\" class=\"btn btn-primary\" onclick=\"document.location.href='".$url.$page."/0".$url2."'\">1</button>";
                                 $array = $this->map_numbers($max,$pages);
                                 $next = $page + 1;
                                 $next10 = $page + 10;
                                 $next100 = $page + 100;
 
                                 if ($next < $pages) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next."/".$array[$next]."'\">&gt;&gt;</button>";
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next."/".$array[$next].$url2."'\">&gt;&gt;</button>";
                                 }
 
                                 if ($next10 < $pages) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next10."/".$array[$next10]."'\">+ 10</button>";
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next10."/".$array[$next10].$url2."'\">+ 10</button>";
                                 }
 
                                 if ($next100 < $pages) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next100."/".$array[$next100]."'\">+ 100</button>";
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next100."/".$array[$next100].$url2."'\">+ 100</button>";
                                 }
 
-                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pages."/".$array[$pages]."'\">$pages</button>";
+                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pages."/".$array[$pages].$url2."'\">$pages</button>";
 
                         } else {
                                 $array = $this->map_numbers($max,$pages);
+
+                                $button_pre = "<button type=\"button\" class=\"btn btn-default\"";
+                                $onclick = "onclick=\"document.location.href='";
 
                                 $pre = $page - 1;
                                 $pre10 = $page - 10;
@@ -112,33 +115,40 @@ class loader extends projects_functions {
                                 $next10 = $page + 10;
                                 $next100 = $page + 100;
 
-                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url."1/0'\">1</button>";
+                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url."1/0".$url2."'\">1</button>";
 
                                 if ($pre10 > 0) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pre10."/$array[$pre10]'\">- 10</button>";
+                                    $html .= $button_pre . $onclick . $url . 
+                                    $pre10 . "/" . $array[$pre10] . $url2 . '>- 10</button>';
+                                    /*
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" 
+                                        onclick=\"document.location.href='".$url.$pre10."/".$array[$pre10]'\">- 10</button>";*/
                                 }
 
                                 if ($pre100 > 0) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pre100."/$array[$pre100]'\">- 100</button>";
+                                    $html .= $button_pre . $onclick . $url . 
+                                    $pre100 . "/" . $array[$pre100] . $url2 . '>- 100</button>';
+                                    /*
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pre100."/$array[$pre100]'\">- 100</button>";*/
                                 }
 
-                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pre."/$array[$pre]'\">&lt;&lt;</button>";
+                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pre."/".$array[$pre].$url2."'\">&lt;&lt;</button>";
 
-                                $html .= "<button type=\"button\" class=\"btn btn-primary\" onclick=\"document.location.href='".$url.$page."/$array[$page]'\">$page</button>";
+                                $html .= "<button type=\"button\" class=\"btn btn-primary\" onclick=\"document.location.href='".$url.$page."/".$array[$page].$url2."'\">$page</button>";
 
                                 if ($next < $pages) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next."/$array[$next]'\">&gt;&gt;</button>";
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next."/".$array[$next].$url2."'\">&gt;&gt;</button>";
                                 }
 
                                 if ($next10 < $pages) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next10."/$array[$next10]'\">+ 10</button>";
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next10."/".$array[$next10].$url2."'\">+ 10</button>";
                                 }
 
                                 if ($next100 < $pages) {
-                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next100."/$array[$next100]'\">+ 100</button>";
+                                        $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$next100."/".$array[$next100].$url2."'\">+ 100</button>";
                                 }
 
-                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pages."/$array[$pages]'\">$pages</button>";
+                                $html .= "<button type=\"button\" class=\"btn btn-default\" onclick=\"document.location.href='".$url.$pages."/".$array[$pages].$url2."'\">$pages</button>";
 
                         }
                         $html .= "</div>";

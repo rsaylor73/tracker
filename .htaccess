@@ -1,0 +1,67 @@
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://tracker.customphpdesign.com/$1 [R,L]
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+# One param
+# IE: search
+
+RewriteRule ^/?([^/]*)$ index.php?section=$1 [L,QSA]
+
+# Two params
+# IE: search/12345
+
+RewriteRule ^pdf/?([^/]*)$ view_pdf.php?pdf_file=$1 [NC,L]
+RewriteRule ^editproject/([a-zA-Z0-9]+)/?$ index.php?section=editproject&id=$1 [NC,L]
+RewriteRule ^deleteproject/([a-zA-Z0-9]+)/?$ index.php?section=deleteproject&id=$1 [NC,L]
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Page_Label/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Page_Label&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Page_Index/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Page_Index&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Author/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Author&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Date/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Date&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Creation_Date/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Creation_Date&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Comments/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Comments&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Category/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Category&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Comment_Type/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Comment_Type&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Discipline/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Discipline&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Importance/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Importance&direction=$2 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/Cost_Reduction/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Cost_Reduction&direction=$2 [NC,L]
+
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Page_Label/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Page_Label&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Page_Index/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Page_Index&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Author/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Author&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Date/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Date&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Creation_Date/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Creation_Date&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Comments/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Comments&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Category/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Category&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Comment_Type/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Comment_Type&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Discipline/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Discipline&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Importance/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Importance&direction=$4 [NC,L]
+
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Cost_Reduction/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Cost_Reduction&direction=$4 [NC,L]
+
+
+

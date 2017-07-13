@@ -16,17 +16,83 @@
     <div class="table-responsive">
     	<table class="table table-responsive table-striped table-hover">
     		<thead>
-    			<th><b>{$up}<br>Label<br>{$down}</b></th>
-    			<th><b>{$up}<br>Index<br>{$down}</b></th>
-    			<th><b>{$up}<br>Author<br>{$down}</b></th>
-    			<th><b>{$up}<br>Date<br>{$down}</b></th>
-    			<th><b>{$up}<br>Creation<br>{$down}</b></th>
-    			<th><b>{$up}<br>Comments<br>{$down}</b></th>
-    			<th><b>{$up}<br>Category<br>{$down}</b></th>
-    			<th><b>{$up}<br>Type<br>{$down}</b></th>
-    			<th><b>{$up}<br>Discipline<br>{$down}</b></th>
-    			<th><b>{$up}<br>Importance<br>{$down}</b></th>
-    			<th><b>{$up}<br>Reduction<br>{$down}</b></th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Page_Label/DESC">{$up}</a>
+                    <br>Label<br>
+                    <a href="/viewreview/{$projectID}/Page_Label/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Page_Index/DESC">{$up}</a>
+                    <br>Index<br>
+                    <a href="/viewreview/{$projectID}/Page_Index/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Author/DESC">{$up}</a>
+                    <br>Author<br>
+                    <a href="/viewreview/{$projectID}/Author/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Date/DESC">{$up}</a>
+                    <br>Date<br>
+                    <a href="/viewreview/{$projectID}/Date/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Creation_Date/DESC">{$up}</a>
+                    <br>Creation<br>
+                    <a href="/viewreview/{$projectID}/Creation_Date/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Comments/DESC">{$up}</a>
+                    <br>Comments<br>
+                    <a href="/viewreview/{$projectID}/Comments/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Category/DESC">{$up}</a>
+                    <br>Category<br>
+                    <a href="/viewreview/{$projectID}/Category/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Comment_Type/DESC">{$up}</a>
+                    <br>Type<br>
+                    <a href="/viewreview/{$projectID}/Comment_Type/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Discipline/DESC">{$up}</a>
+                    <br>Discipline<br>
+                    <a href="/viewreview/{$projectID}/Discipline/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Importance/DESC">{$up}</a>
+                    <br>Importance<br>
+                    <a href="/viewreview/{$projectID}/Importance/ASC">{$down}</a>
+                    </b>
+                </th>
+    			<th>
+                    <b>
+                    <a href="/viewreview/{$projectID}/Cost_Reduction/DESC">{$up}</a>
+                    <br>Reduction<br>
+                    <a href="/viewreview/{$projectID}/Cost_Reduction/ASC">{$down}</a>
+                    </b>
+                </th>
                 <th>&nbsp;</th>
     		</thead>
     		<tbody>
@@ -62,8 +128,9 @@
       </div>
       <div class="modal-body">
 
-        <form action="index.php" method="GET" style="display:inline">
-        <input type="hidden" name="section" value="mediabuy">
+        <form action="/index.php" method="POST" style="display:inline">
+        <input type="hidden" name="section" value="viewreview">
+        <input type="hidden" name="projectID" value="{$projectID}">
 
         <table class="table table-responsive table-striped">
         <tr>
@@ -83,12 +150,12 @@
 
         <tr>
                 <td width="200">Date:</td>
-                <td><input type="text" name="Date" class="form-control"></td>
+                <td><input type="text" name="Date" class="form-control date2"></td>
         </tr>
 
         <tr>
                 <td width="200">Creation Date:</td>
-                <td><input type="text" name="Creation_Date" class="form-control"></td>
+                <td><input type="text" name="Creation_Date" class="form-control date2"></td>
         </tr>
 
         <tr>
@@ -118,10 +185,16 @@
 
         <tr>
                 <td width="200">Cost_Reduction:</td>
-                <td><input type="text" name="Cost_Reduction" class="form-control"></td>
+                <td><input type="text" name="Cost_Reduction" placeholder="$1,000" class="form-control"></td>
         </tr>
 
-        <tr><td colspan="2"><input type="submit" value="Search" class="btn btn-info"></td></tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Search" class="btn btn-info">&nbsp;
+                <input type="button" value="Reset Search" class="btn btn-warning"
+                    onclick="document.location.href='/viewreview/{$projectID}'">
+            </td>
+        </tr>
         </table>
         </form>
 

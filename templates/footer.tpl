@@ -22,6 +22,16 @@
             maxDate: "+5Y"
         });
     });
+
+    $(function() {
+        $( ".date2" ).datepicker({ 
+            dateFormat: "m/d/yy",
+            changeMonth: true,
+            changeYear: true,
+            minDate: "-2Y", 
+            maxDate: "+5Y"
+        });
+    });
     </script>
 
 <!-- Modal -->
