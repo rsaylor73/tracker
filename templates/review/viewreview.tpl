@@ -4,7 +4,7 @@
     onclick="document.location.href='/editproject/{$projectID}'">&nbsp;
     <button type="button" class="btn btn-info btn-lg" data-toggle="modal" 
     data-target="#myModal">Search</button>&nbsp;
-    <input type="button" value="Add Record" class="btn btn-success btn-lg">
+    <input type="button" value="Add Record" onclick="document.location.href='/insertdata/{$projectID}'" class="btn btn-success btn-lg">
 
     </header>
     <hr>
@@ -109,7 +109,7 @@
     			<td>{$data.Discipline}</td>
     			<td>{$data.Importance}</td>
     			<td>{$data.Cost_Reduction}</td>
-                <td><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                <td><a href="/updatedata/{$data.projectID}/{$data.id}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
     		</tr>
     		{/foreach}
     		</tbody>

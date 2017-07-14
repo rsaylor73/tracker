@@ -210,8 +210,6 @@ class review_functions extends admin_functions {
 			$Importance
 			$Cost_Reduction
 
-
-
 		$order
 		";
 
@@ -246,6 +244,110 @@ class review_functions extends admin_functions {
 
 	} // public function viewreview()
 
+	public function insertdata() {
+		$this->check_permissions('insertdata');
+		$data['projectID'] = $_GET['projectID'];
+		$dir = "review";
+		$template = "insertdata.tpl";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function savedata() {
+		$this->check_permissions('insertdata');
+		$Page_Label = $this->return_safe($_POST['Page_Label']);
+		$Page_Index = $this->return_safe($_POST['Page_Index']);
+		$Author = $this->return_safe($_POST['Author']);
+		$Date = $this->return_safe($_POST['Date']);
+		$Creation_Date = $this->return_safe($_POST['Creation_Date']);
+		$Comments = $this->return_safe($_POST['Comments']);
+		$Category = $this->return_safe($_POST['Category']);
+		$Comment_Type = $this->return_safe($_POST['Comment_Type']);
+		$Discipline = $this->return_safe($_POST['Discipline']);
+		$Importance = $this->return_safe($_POST['Importance']);
+		$Cost_Reduction = $this->return_safe($_POST['Cost_Reduction']);
+
+		$sql = "INSERT INTO `xml_data` 
+		(`projectID`,`Page_Label`,`Page_Index`,`Author`,`Date`,`Creation_Date`,`Comments`,
+		`Category`,`Comment_Type`,`Discipline`,`Importance`,`Cost_Reduction`) VALUES
+		('$_POST[projectID]','$Page_Label','$Page_Index','$Author','$Date','$Creation_Date','$Comments',
+		'$Category','$Comment_Type','$Discipline','$Importance','$Cost_Reduction')
+		";
+		$result = $this->new_mysql($sql);
+        if ($result == "TRUE") {
+        	print "<div class=\"alert alert-success\">The data was added. Loading...</div>";
+        } else {
+        	print "<div class=\"alert alert-danger\">The data failed to add. Loading...</div>";
+        }
+		$redirect = "/viewreview/$_POST[projectID]";
+		?>
+        <script>
+        setTimeout(function() {
+              window.location.replace('<?=$redirect;?>')
+        }
+        ,2000);
+        </script>
+		<?php
+	}
+
+	public function updatedata() {
+		$this->check_permissions('insertdata');
+		$sql = "SELECT * FROM `xml_data` WHERE `id` = '$_GET[id]' AND `projectID` = '$_GET[projectID]'";
+		$result=$this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			foreach ($row as $key=>$value) {
+				$data[$key] = $value;
+			}
+		}
+		$dir = "review";
+		$template = "updatedata.tpl";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function saveupdatedata() {
+		$this->check_permissions('insertdata');
+		$Page_Label = $this->return_safe($_POST['Page_Label']);
+		$Page_Index = $this->return_safe($_POST['Page_Index']);
+		$Author = $this->return_safe($_POST['Author']);
+		$Date = $this->return_safe($_POST['Date']);
+		$Creation_Date = $this->return_safe($_POST['Creation_Date']);
+		$Comments = $this->return_safe($_POST['Comments']);
+		$Category = $this->return_safe($_POST['Category']);
+		$Comment_Type = $this->return_safe($_POST['Comment_Type']);
+		$Discipline = $this->return_safe($_POST['Discipline']);
+		$Importance = $this->return_safe($_POST['Importance']);
+		$Cost_Reduction = $this->return_safe($_POST['Cost_Reduction']);
+
+		$sql = "
+		UPDATE `xml_data` SET 
+		`Page_Label` = '$Page_Label',
+		`Page_Index` = '$Page_Index',
+		`Author` = '$Author',
+		`Date` = '$Date',
+		`Creation_Date` = '$Creation_Date',
+		`Comments` = '$Comments',
+		`Category` = '$Category',
+		`Comment_Type` = '$Comment_Type',
+		`Discipline` = '$Discipline',
+		`Importance` = '$Importance',
+		`Cost_Reduction` = '$Cost_Reduction'
+		WHERE `id` = '$_POST[id]' AND `projectID` = '$_POST[projectID]'
+		";
+		$result = $this->new_mysql($sql);
+        if ($result == "TRUE") {
+        	print "<div class=\"alert alert-success\">The data was updated. Loading...</div>";
+        } else {
+        	print "<div class=\"alert alert-danger\">The data failed to update. Loading...</div>";
+        }
+		$redirect = "/viewreview/$_POST[projectID]";
+		?>
+        <script>
+        setTimeout(function() {
+              window.location.replace('<?=$redirect;?>')
+        }
+        ,2000);
+        </script>
+		<?php
+	}
 
 } // class reports extends admin
 ?>

@@ -3,6 +3,11 @@ include PATH."/class/common.class.php";
 
 class users_functions extends common_functions {
 
+	public function users() {
+		print "<h1>Users - To Do</h1>";
+		
+	}
+
 	public function login() {
 		$sql = "
 		SELECT 

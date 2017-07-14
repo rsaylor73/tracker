@@ -89,13 +89,13 @@ Show_Countdown();
                         <a href="/projects">Projects</a>
                     </li>
                     <li>
-                        <a href="#">Review</a>
+                        <a href="/review">Review</a>
                     </li>
                     <li>
-                        <a href="#">Reports</a>
+                        <a href="/reports">Reports</a>
                     </li>
                     <li>
-                        <a href="#">Users</a>
+                        <a href="/users">Users</a>
                     </li>
                     <li>
                         <a href="/logout">Logout</a>

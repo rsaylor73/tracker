@@ -17,6 +17,12 @@ RewriteRule ^pdf/?([^/]*)$ view_pdf.php?pdf_file=$1 [NC,L]
 RewriteRule ^editproject/([a-zA-Z0-9]+)/?$ index.php?section=editproject&id=$1 [NC,L]
 RewriteRule ^deleteproject/([a-zA-Z0-9]+)/?$ index.php?section=deleteproject&id=$1 [NC,L]
 RewriteRule ^viewreview/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1 [NC,L]
+RewriteRule ^insertdata/([a-zA-Z0-9]+)/?$ index.php?section=insertdata&projectID=$1 [NC,L]
+
+# Three
+RewriteRule ^updatedata/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=updatedata&projectID=$1&id=$2 [NC,L]
+
+# Page Sorting
 
 RewriteRule ^viewreview/([a-zA-Z0-9]+)/Page_Label/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Page_Label&direction=$2 [NC,L]
 
@@ -40,6 +46,8 @@ RewriteRule ^viewreview/([a-zA-Z0-9]+)/Importance/([a-zA-Z0-9]+)?$ index.php?sec
 
 RewriteRule ^viewreview/([a-zA-Z0-9]+)/Cost_Reduction/([a-zA-Z0-9]+)?$ index.php?section=viewreview&projectID=$1&field=Cost_Reduction&direction=$2 [NC,L]
 
+# Page Numbers
+RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3 [NC,L]
 
 RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Page_Label/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Page_Label&direction=$4 [NC,L]
 

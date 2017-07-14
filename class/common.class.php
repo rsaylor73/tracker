@@ -16,7 +16,15 @@ class common_functions extends JWT {
 		// projects	
 		// deleteproject
 		// review
+		// insertdata
 			
+	}
+
+	public function return_safe($var) {
+		$var = $this
+			->linkID
+			->escape_string($var);
+		return($var);
 	}
 
 } // class common extends core
