@@ -18,6 +18,10 @@ RewriteRule ^editproject/([a-zA-Z0-9]+)/?$ index.php?section=editproject&id=$1 [
 RewriteRule ^deleteproject/([a-zA-Z0-9]+)/?$ index.php?section=deleteproject&id=$1 [NC,L]
 RewriteRule ^viewreview/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1 [NC,L]
 RewriteRule ^insertdata/([a-zA-Z0-9]+)/?$ index.php?section=insertdata&projectID=$1 [NC,L]
+RewriteRule ^viewreport/([a-zA-Z0-9]+)/?$ index.php?section=viewreport&projectID=$1 [NC,L]
+RewriteRule ^newuser/([a-zA-Z0-9]+)/?$ index.php?section=newuser&id=$1 [NC,L]
+RewriteRule ^edituser/([a-zA-Z0-9]+)/?$ index.php?section=edituser&id=$1 [NC,L]
+RewriteRule ^deleteuser/([a-zA-Z0-9]+)/?$ index.php?section=deleteuser&id=$1 [NC,L]
 
 # Three
 RewriteRule ^updatedata/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=updatedata&projectID=$1&id=$2 [NC,L]

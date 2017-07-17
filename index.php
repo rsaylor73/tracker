@@ -41,6 +41,10 @@ switch ($section) {
 
 if ($section == "login") {
         $core->load_module('login');
+} elseif ($section == "forgotpassword") {
+        $core->load_module('forgotpassword');
+} elseif ($section == "resetpw") {
+        $core->load_module('resetpw');
 } else {
         $check_login = $core->check_login();
         if ($check_login == "FALSE") {

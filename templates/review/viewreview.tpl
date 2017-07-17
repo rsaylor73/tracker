@@ -2,6 +2,8 @@
     <h1>Review </h1>
     <input type="button" value="Edit Project" class="btn btn-primary btn-lg"
     onclick="document.location.href='/editproject/{$projectID}'">&nbsp;
+    <input type="button" value="Reports" class="btn btn-primary btn-lg"
+    onclick="document.location.href='/viewreport/{$projectID}'">&nbsp;
     <button type="button" class="btn btn-info btn-lg" data-toggle="modal" 
     data-target="#myModal">Search</button>&nbsp;
     <input type="button" value="Add Record" onclick="document.location.href='/insertdata/{$projectID}'" class="btn btn-success btn-lg">

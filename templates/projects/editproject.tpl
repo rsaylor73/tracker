@@ -1,7 +1,11 @@
     <header class="jumbotron hero-spacer">
     <h1>Edit Project</h1>
+    <input type="button" value="Project" class="btn btn-primary btn-lg"
+    onclick="document.location.href='/editproject/{$id}'">&nbsp;
     <input type="button" value="Review" class="btn btn-primary btn-lg"
-    onclick="document.location.href='/viewreview/{$id}'"
+    onclick="document.location.href='/viewreview/{$id}'">&nbsp;
+    <input type="button" value="Reports" class="btn btn-primary btn-lg"
+    onclick="document.location.href='/viewreport/{$id}'">
     </header>
     <hr>
     <form name="myform" enctype="multipart/form-data" action="/index.php" method="post">

@@ -46,7 +46,7 @@
                         <h3>Reports</h3>
                         <p>View project reports</p>
                         <p>
-                            <a href="#" class="btn btn-primary">Continue</a> 
+                            <a href="/reports" class="btn btn-primary">Continue</a> 
                         </p>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                         <h3>Users</h3>
                         <p>View, edit, add users</p>
                         <p>
-                            <a href="#" class="btn btn-primary">Continue</a> 
+                            <a href="/users" class="btn btn-primary">Continue</a> 
                         </p>
                     </div>
                 </div>

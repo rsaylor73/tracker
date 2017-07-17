@@ -19,7 +19,7 @@
             <div class="row top-buffer">
             	<div class="col-sm-8">
             		<input type="submit" value="Login" class="btn btn-success">&nbsp;
-            		<input type="button" value="Forgot Password" class="btn btn-warning">
+            		<input type="button" value="Forgot Password" onclick="document.location.href='/forgotpassword'" class="btn btn-warning">
             	</div>
             </div>
 

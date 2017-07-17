@@ -42,6 +42,10 @@
   integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk="
   crossorigin="anonymous"></script>
 
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
 </head>
 
 <body>
@@ -96,6 +100,9 @@ Show_Countdown();
                     </li>
                     <li>
                         <a href="/users">Users</a>
+                    </li>
+                    <li>
+                        <a href="/profile">Profile</a>
                     </li>
                     <li>
                         <a href="/logout">Logout</a>
