@@ -15,7 +15,7 @@
  		<div class="col-sm-3">DOT Project #:</div>
  		<div class="col-sm-3"><input type="text" name="dotproject" value="{$dotproject}" required class="form-control"></div>
  		<div class="col-sm-3">Sub Account #:</div>
- 		<div class="col-sm-3"><input type="text" name="subaccount" value="{$subaccount}" required class="form-control"></div>
+ 		<div class="col-sm-3"><input type="text" name="subaccount" value="{$subaccount}" class="form-control"></div>
  	</div>
 
  	<div class="row top-buffer">

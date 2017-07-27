@@ -8,7 +8,23 @@
 
         <hr>
 
-        
+        {if $alert eq "1"}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger">You do not have a default state set. Please visit your profile to set the default state.</div>
+                </div>
+            </div>
+        {/if}
+
+        {if $default_state ne ""}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-info">
+                        Your current default state selected is <b>{$default_state}</b>
+                    </div>
+                </div>
+            </div>
+        {/if}
 
         <!-- Page Features -->
         <div class="row text-center">

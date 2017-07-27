@@ -9,7 +9,22 @@ class users_functions extends common_functions {
 	}
 
 	public function profile() {
-		$sql = "SELECT `first`,`last`,`email`,`uuname` FROM `users` WHERE `id` = '$_SESSION[id]'";
+		$sql = "
+		SELECT 
+			`u`.`first`,
+			`u`.`last`,
+			`u`.`email`,
+			`u`.`uuname`,
+			`s`.`state`
+
+		FROM `users` u
+
+		LEFT JOIN `state` s ON `u`.`default_state` = `s`.`state_id`
+		
+		WHERE 
+			`u`.`id` = '$_SESSION[id]'
+		";
+
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {
 			foreach ($row as $key=>$value) {
@@ -81,7 +96,7 @@ class users_functions extends common_functions {
 	public function login() {
 		$sql = "
 		SELECT 
-			`id`,`first`,`last`,`email`,`groupID`,`uuname`,`password` 
+			`id`,`first`,`last`,`email`,`groupID`,`uuname`,`password`,`default_state`
 		FROM 
 			`users` 
 		WHERE 

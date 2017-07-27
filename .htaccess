@@ -10,6 +10,7 @@ RewriteCond %{SCRIPT_FILENAME} !-f
 
 RewriteRule ^/?([^/]*)$ index.php?section=$1 [L,QSA]
 
+
 # Two params
 # IE: search/12345
 
@@ -22,7 +23,7 @@ RewriteRule ^viewreport/([a-zA-Z0-9]+)/?$ index.php?section=viewreport&projectID
 RewriteRule ^newuser/([a-zA-Z0-9]+)/?$ index.php?section=newuser&id=$1 [NC,L]
 RewriteRule ^edituser/([a-zA-Z0-9]+)/?$ index.php?section=edituser&id=$1 [NC,L]
 RewriteRule ^deleteuser/([a-zA-Z0-9]+)/?$ index.php?section=deleteuser&id=$1 [NC,L]
-
+RewriteRule ^user_states/([a-zA-Z0-9]+)/?$ index.php?section=user_states&id=$1 [NC,L]
 # Three
 RewriteRule ^updatedata/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=updatedata&projectID=$1&id=$2 [NC,L]
 
@@ -77,3 +78,10 @@ RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Cost_
 
 
 
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php56” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddType application/x-httpd-ea-php56 .php .php5 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

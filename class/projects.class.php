@@ -218,23 +218,31 @@ class projects_functions extends reports_functions {
 	private function getSubmittalTypes($id='') {
 		$sql = "
 		SELECT
-			`id`,`Description`
+			`id`,`Description`,`category`
 		FROM
 			`SubmittalTypes` s
 
 		WHERE
 			1
 
-		ORDER BY `Description` ASC
+		ORDER BY `category` ASC, `Description` ASC
 		";
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {
+			if ($category != $row['category']) {
+				if ($category != "") {
+					$option .= "</optgroup>";
+				}
+				$option .= "<optgroup label=\"$row[category]\">";
+				$category = $row['category'];
+			}
 			if ($row['id'] == $id) {
 				$option .= "<option selected value=\"$row[id]\">$row[Description]</option>";
 			} else {
 				$option .= "<option value=\"$row[id]\">$row[Description]</option>";
 			}
 		}
+		$option .= "</optgroup>";
 		return($option);
 	} // getSubmittalTypes($id='')
 
@@ -286,21 +294,29 @@ class projects_functions extends reports_functions {
 	private function getRegion($id='') {
 		$sql = "
 		SELECT
-			`id`,`name`
+			`id`,`name`,`category`
 		FROM
 			`region`
 		WHERE
 			1
-		ORDER BY `name` ASC
+		ORDER BY `category` ASC,`name` ASC
 		";
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {
+			if ($category != $row['category']) {
+				if ($category != "") {
+					$option .= "</optgroup>";
+				}
+				$option .= "<optgroup label=\"$row[category]\">";
+				$category = $row['category'];
+			}
 			if ($row['id'] == $id) {
 				$option .= "<option selected value=\"$row[id]\">$row[name]</option>";
 			} else {
 				$option .= "<option value=\"$row[id]\">$row[name]</option>";
 			}			
 		}
+		$option .= "</optgroup>";
 		return($option);
 	}
 
@@ -345,6 +361,7 @@ class projects_functions extends reports_functions {
 			$file2 .= "_.pdf";
 			move_uploaded_file($tmpName2, "../uploads/$file2");
 		}
+
 		// insert into DB
 		foreach ($_POST as $key=>$value) {
 			switch($key) {

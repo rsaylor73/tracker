@@ -2,13 +2,13 @@
     <h1>New Project</h1>
     </header>
     <hr>
-    <form name="myform" enctype="multipart/form-data" action="/index.php" method="post">
+    <form name="myform" action="/index.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="section" value="save_project">
     <div class="row top-buffer">
  		<div class="col-sm-3">DOT Project #:</div>
  		<div class="col-sm-3"><input type="text" name="dotproject" required class="form-control"></div>
  		<div class="col-sm-3">Sub Account #:</div>
- 		<div class="col-sm-3"><input type="text" name="subaccount" required class="form-control"></div>
+ 		<div class="col-sm-3"><input type="text" name="subaccount" class="form-control"></div>
  	</div>
 
  	<div class="row top-buffer">
@@ -85,7 +85,7 @@
 
  	<div class="row top-buffer">
  		<div class="col-sm-12">
- 			<input type="submit" value="Save Project" disabled id="s1" class="btn btn-success">&nbsp;
+ 			<input type="submit" value="Save Project" id="s1" class="btn btn-success">&nbsp;
  			<input type="button" value="Cancel" class="btn btn-warning" 
  				onclick="document.location.href='/projects'">
  		</div>

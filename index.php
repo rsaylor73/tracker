@@ -39,6 +39,7 @@ switch ($section) {
         break;
 }
 
+
 if ($section == "login") {
         $core->load_module('login');
 } elseif ($section == "forgotpassword") {

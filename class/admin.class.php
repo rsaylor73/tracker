@@ -161,5 +161,91 @@ class admin_functions extends users_functions {
 		<?php
 	}
 
+    public function user_states() {
+		$this->check_permissions('admin');
+
+        $sql = "SELECT * FROM `users` WHERE `id` = '$_GET[id]'";
+        $result = $this->new_mysql($sql);
+        $row = $result->fetch_assoc();
+        print "<h2><a href=\"/users\">Users</a> : State Access : $row[first] $row[last]</h2>
+        <form action=\"/index.php\" method=\"post\">
+        <input type=\"hidden\" name=\"id\" value=\"$_GET[id]\">
+        <input type=\"hidden\" name=\"section\" value=\"state_access\">
+        <table class=\"table\">
+        <tr>
+                <td><b>State</b></td><td><b>Enabled</b></td>
+                <td><b>State</b></td><td><b>Enabled</b></td>
+        </tr>";
+
+        $sql2 = "SELECT * FROM `state` ORDER BY `state` ASC";
+        $result2 = $this->new_mysql($sql2);
+        while ($row2 = $result2->fetch_assoc()) {
+
+			if ($counter == "0") {
+	            $x++;
+	            if ($x % 2) {
+	                    $bgcolor="bgcolor=#C0C0C0";
+	            } else {
+	                    $bgcolor="bgcolor=#FFFFFF";
+	            }
+
+
+	            print "<tr $bgcolor>";
+			}
+			$counter++;
+
+
+	        print "<td>$row2[state]</td>";
+	        $sql3 = "SELECT `access` FROM `state_access` WHERE `state_access`.`stateID` = '$row2[state_id]' AND `state_access`.`userID` = '$_SESSION[id]'";
+	        $result3 = $this->new_mysql($sql3);
+	        $checked = "";
+	        while ($row3 = $result3->fetch_assoc()) {
+	                if ($row3['access'] == "Yes") {
+	                        $checked = "checked";
+	                }
+	        }
+	        print "<td><input type=\"checkbox\" name=\"state_$row2[state_id]\" value=\"checked\" $checked></td>";
+
+	        if ($counter == "2") {
+	                print "</tr>";
+	                $counter = "0";
+	        }
+	    }
+		print "<tr><td colspan=2><input type=\"submit\" class=\"btn btn-primary\" value=\"Save\"></td></tr>";
+		print "</table></form>";
+    }
+
+    public function state_access() {
+		$this->check_permissions('admin');
+
+        $sql = "DELETE FROM `state_access` WHERE `userID` = '$_POST[id]'";
+        $result = $this->new_mysql($sql);
+
+        $sql2 = "SELECT * FROM `state` ORDER BY `state` ASC";
+        $result2 = $this->new_mysql($sql2);
+
+
+        while ($row2 = $result2->fetch_assoc()) {
+            $i = "state_";
+            $i .= $row2['state_id'];
+            $check = $_POST[$i];
+            if ($check == "checked") {
+                $sql3 = "INSERT INTO `state_access` (`userID`,`stateID`,`access`) VALUES ('$_POST[id]','$row2[state_id]','Yes')";
+                $result3 = $this->new_mysql($sql3);
+            }
+        }
+		print "<div class=\"alert alert-success\">The user was updated. Loading...</div>";
+
+		$redirect = "/users";
+		?>
+		<script>
+		setTimeout(function() {
+			window.location.replace('<?=$redirect;?>')
+		}
+		,2000);
+		</script>
+		<?php
+    }
+
 } // class admin extends users
 ?>

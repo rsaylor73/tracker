@@ -17,6 +17,7 @@
             <input type="button" value="Edit" class="btn btn-primary" onclick="
                 document.location.href='/edituser/{$user.id}'
             ">&nbsp;
+            <input type="button" value="States" class="btn btn-info" onclick="document.location.href='/user_states/{$user.id}'">&nbsp;
             <input type="button" value="Delete" class="btn btn-danger" onclick="
             if(confirm('You are about to delete {$user.first} {$user.last}. Click OK to continue.')) {
                 document.location.href='/deleteuser/{$user.id}';
