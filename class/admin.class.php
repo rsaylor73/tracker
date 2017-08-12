@@ -11,6 +11,7 @@ class admin_functions extends users_functions {
 			`u`.`first`,
 			`u`.`last`,
 			`u`.`email`,
+			`u`.`userType`,
 			`u`.`groupID`,
 			`g`.`group_name`
 
@@ -33,6 +34,7 @@ class admin_functions extends users_functions {
 				$data['users'][$id]['last'] = $row['last'];
 				$data['users'][$id]['email'] = $row['email'];
 				$data['users'][$id]['group_name'] = $row['group_name'];
+				$data['users'][$id]['userType'] = $row['userType'];
 			}
 		}
 		$dir = "/admin";
@@ -51,6 +53,7 @@ class admin_functions extends users_functions {
 			`u`.`email`,
 			`u`.`uuname`,
 			`u`.`groupID`,
+			`u`.`userType`,
 			`g`.`group_name`
 
 		FROM 
@@ -105,9 +108,10 @@ class admin_functions extends users_functions {
 		$password = $_POST['password'];
 		$hash = password_hash($password, PASSWORD_DEFAULT);
 		$sql = "INSERT INTO `users` 
-		(`uuname`,`password`,`first`,`last`,`email`,`groupID`)
+		(`uuname`,`password`,`first`,`last`,`email`,`groupID`,`userType`)
 		VALUES
-		('$_POST[uuname]','$hash','$_POST[first]','$_POST[last]','$_POST[email]','$_POST[groupID]')
+		('$_POST[uuname]','$hash','$_POST[first]','$_POST[last]','$_POST[email]','$_POST[groupID]',
+		'$_POST[userType]')
 		";
 		$result = $this->new_mysql($sql);
 		if ($result == "TRUE") {
@@ -143,7 +147,7 @@ class admin_functions extends users_functions {
 			$sql_pw = ",`password` = '$hash'";
 		}
 		$sql = "UPDATE `users` SET `first` = '$_POST[first]', `last` = '$_POST[last]', 
-		`email` = '$_POST[email]' $sql_pw WHERE `id` = '$_POST[id]'";
+		`email` = '$_POST[email]', `userType` = '$_POST[userType]' $sql_pw WHERE `id` = '$_POST[id]'";
 		$result = $this->new_mysql($sql);
 		if ($result == "TRUE") {
 			print "<div class=\"alert alert-success\">The user was updated. Loading...</div>";
@@ -167,7 +171,7 @@ class admin_functions extends users_functions {
         $sql = "SELECT * FROM `users` WHERE `id` = '$_GET[id]'";
         $result = $this->new_mysql($sql);
         $row = $result->fetch_assoc();
-        print "<h2><a href=\"/users\">Users</a> : State Access : $row[first] $row[last]</h2>
+        print "<h2><a href=\"/users\">Users</a> : DOTs Access : $row[first] $row[last]</h2>
         <form action=\"/index.php\" method=\"post\">
         <input type=\"hidden\" name=\"id\" value=\"$_GET[id]\">
         <input type=\"hidden\" name=\"section\" value=\"state_access\">
@@ -177,7 +181,17 @@ class admin_functions extends users_functions {
                 <td><b>State</b></td><td><b>Enabled</b></td>
         </tr>";
 
-        $sql2 = "SELECT * FROM `state` ORDER BY `state` ASC";
+        $sql2 = "
+        SELECT 
+        	s.* 
+
+        FROM 
+        	`state` s, `dots` d
+
+        WHERE 
+        	`s`.`state_id` = `d`.`stateID`
+
+        ORDER BY `state` ASC";
         $result2 = $this->new_mysql($sql2);
         while ($row2 = $result2->fetch_assoc()) {
 
@@ -196,7 +210,7 @@ class admin_functions extends users_functions {
 
 
 	        print "<td>$row2[state]</td>";
-	        $sql3 = "SELECT `access` FROM `state_access` WHERE `state_access`.`stateID` = '$row2[state_id]' AND `state_access`.`userID` = '$_SESSION[id]'";
+	        $sql3 = "SELECT `access` FROM `state_access` WHERE `state_access`.`stateID` = '$row2[state_id]' AND `state_access`.`userID` = '$_GET[id]'";
 	        $result3 = $this->new_mysql($sql3);
 	        $checked = "";
 	        while ($row3 = $result3->fetch_assoc()) {

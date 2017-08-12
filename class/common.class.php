@@ -1,9 +1,28 @@
 <?php
-include PATH."/class/jwt_helper.php";
+include PATH."/class/dot.class.php";
 
-class common_functions extends JWT {
+class common_functions extends dot_functions {
 
 	public function home_page() {
+
+		switch ($_SESSION['userType']){
+			case "staff":
+				$this->dots();
+			break;
+
+			case "client":
+				$this->client();
+			break;
+
+			default:
+			print "<div class=\"alert alert-danger\">Error: your account is not setup.</div>";
+			die;
+			break;
+		}
+
+
+
+		/*
 		if ($_SESSION['default_state'] == "") {
 			$data['alert'] = "1";
 		}
@@ -15,6 +34,7 @@ class common_functions extends JWT {
 		$template = "dashboard.tpl";
 		$data['date'] = date("Y");
 		$this->load_smarty($data,$template);
+		*/
 	}
 
 	public function check_permissions($method) {
@@ -54,40 +74,7 @@ class common_functions extends JWT {
 		if ($access_granted == "0") {
 			print "<div class=\"alert alert-danger\"><b>ERROR:</b>You do not have access.</div>";
 			die;
-		}
-		// The following needs to be added to the UI
-
-		/*
-			admin
-			-- all
-
-			projects
-			- editproject
-			- projects
-			- deleteproject
-			- review
-			- insertdata
-			- reports
-
-			reviews
-			- review
-			- insertdata
-			- reports
-
-			reports
-			- reports
-
-		*/
-
-
-		// editproject
-		// projects	
-		// deleteproject
-		// review
-		// insertdata
-		// reports
-		// admin
-			
+		}		
 	}
 
 	public function return_safe($var) {
@@ -155,6 +142,91 @@ class common_functions extends JWT {
 		<?php
 
     }
+
+	public function getSubmittalTypes($id='',$state='') {
+		$sql = "
+		SELECT
+			`id`,`Description`,`category`
+		FROM
+			`SubmittalTypes` s
+
+		WHERE
+			1
+			AND `category` = '$state'
+
+		ORDER BY `category` ASC, `Description` ASC
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			if ($category != $row['category']) {
+				if ($category != "") {
+					$option .= "</optgroup>";
+				}
+				$option .= "<optgroup label=\"$row[category]\">";
+				$category = $row['category'];
+			}
+			if ($row['id'] == $id) {
+				$option .= "<option selected value=\"$row[id]\">$row[Description]</option>";
+			} else {
+				$option .= "<option value=\"$row[id]\">$row[Description]</option>";
+			}
+		}
+		$option .= "</optgroup>";
+		return($option);
+	} // getSubmittalTypes($id='')
+
+	public function getProjectTypes($id='') {
+		$sql = "
+		SELECT
+			`id`,`project_type`
+		FROM
+			`project_type`
+		WHERE
+			1
+		ORDER BY `project_type` ASC
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			if ($row['id'] == $id) {
+				$option .= "<option selected value=\"$row[id]\">$row[project_type]</option>";
+			} else {
+				$option .= "<option value=\"$row[id]\">$row[project_type]</option>";
+			}			
+		}
+		return($option);
+	}
+
+	public function getRegion($id='',$state='') {
+		$sql = "
+		SELECT
+			`id`,`name`,`category`
+		FROM
+			`region`
+		WHERE
+			1
+			AND `category` = '$state'
+		ORDER BY `category` ASC,`name` ASC
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			if ($category != $row['category']) {
+				if ($category != "") {
+					$option .= "</optgroup>";
+				}
+				$option .= "<optgroup label=\"$row[category]\">";
+				$category = $row['category'];
+			}
+			if ($row['id'] == $id) {
+				$option .= "<option selected value=\"$row[id]\">$row[name]</option>";
+			} else {
+				$option .= "<option value=\"$row[id]\">$row[name]</option>";
+			}			
+		}
+		$option .= "</optgroup>";
+		return($option);
+	}
+
+
 
 } // class common extends core
 ?>

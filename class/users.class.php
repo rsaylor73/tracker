@@ -96,7 +96,7 @@ class users_functions extends common_functions {
 	public function login() {
 		$sql = "
 		SELECT 
-			`id`,`first`,`last`,`email`,`groupID`,`uuname`,`password`,`default_state`
+			`id`,`first`,`last`,`email`,`groupID`,`uuname`,`password`,`userType`
 		FROM 
 			`users` 
 		WHERE 

@@ -3,7 +3,335 @@ include PATH."/class/admin.class.php";
 
 class review_functions extends admin_functions {
 
+	public function new_review() {
+		$this->check_permissions('review');
+		$sql = "
+		SELECT
+			`p`.`id`,
+			`p`.`dotproject`
+
+		FROM
+			`projects` p
+
+		WHERE
+			`p`.`dotID` = '$_GET[dotID]'
+
+		ORDER BY `dotproject` ASC
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$options .= "<option value=\"$row[id]\">$row[dotproject]</option>";
+		}
+
+		$data['options'] = $options;
+		$data['dotID'] = $_GET['dotID'];
+		$template = "new_review.tpl";
+		$dir = "/review";
+		$this->load_smarty($data,$template,$dir);
+
+	}
+
+	/* This is review but by project */
+	public function projects() {
+		$this->check_permissions('review');
+
+		$sql = "
+		SELECT
+			`s`.`state`
+		FROM
+			`dots` d, `state` s
+		WHERE
+			`d`.`id` = '$_GET[dotID]'
+			AND `d`.`stateID` = `s`.`state_id`
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$state = $row['state'];
+		}
+
+		$sql = "
+		SELECT
+			`p`.`id`,
+			`p`.`dotproject`,
+			`p`.`subaccount`,
+			`p`.`description`,
+			`r`.`name` AS 'region',
+			`t`.`project_type`
+
+
+		FROM
+			`projects` p
+
+		LEFT JOIN `region` r ON `p`.`regionID` = `r`.`id`
+		LEFT JOIN `project_type` t ON `p`.`projecttypeID` = `t`.`id`
+
+		WHERE
+			`p`.`dotID` = '$_GET[dotID]'
+			AND `p`.`id` = '$_GET[projectID]'
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			foreach ($row as $key=>$value) {
+				$data[$key] = $value;
+			}
+		}
+		$data['SubmittalTypes'] = $this->getSubmittalTypes($submittalID,$state);
+		$template = "project_new_review.tpl";
+		$dir = "/projects";
+		$this->load_smarty($data,$template,$dir);
+
+	}
+
+	public function save_review() {
+
+		$this->check_permissions('review');
+		$sql = "INSERT INTO `review` 
+		(`projectID`,`review_type`,`project_phase`,`date_received`)
+		VALUES
+		('$_POST[id]','$_POST[review_type]','$_POST[project_phase]','$_POST[date_received]')
+		";
+		$result = $this->new_mysql($sql);
+		if ($result == "TRUE") {
+			$reviewID = $this->linkID->insert_id;
+			print "<div class=\"alert alert-success\">The review was added. Loading...</div>";
+			$result = $this->new_mysql($sql);
+			$redirect = "/review/" . $reviewID;
+			?>
+			<script>
+			setTimeout(function() {
+				window.location.replace('<?=$redirect;?>')
+			}
+			,2000);
+			</script>
+			<?php
+		} else {
+			print "<div class=\"alert alert-danger\">The review failed to add.</div>";
+		}
+
+	}
+
 	public function review() {
+		// page 9 from info sheet
+		$this->check_permissions('review');
+
+		$sql = "
+		SELECT
+			`r`.`reviewID`,
+			`d`.`logo`,
+			`p`.`dotproject`,
+			`p`.`subaccount`,
+			`p`.`id` AS 'projectID',
+			`r`.`review_type`,
+			`r`.`project_phase`,
+			`r`.`date_received`,
+			`r`.`date_completed`,
+			`s`.`state`
+
+		FROM
+			`review` r, `projects` p, `dots` d, `state` s
+
+		WHERE
+			`r`.`reviewID` = '$_GET[reviewID]'
+			AND `r`.`projectID` = `p`.`id`
+			AND `p`.`dotID` = `d`.`id`
+			AND `d`.`stateID` = `s`.`state_id`
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			foreach ($row as $key=>$value) {
+				$data[$key] = $value;
+			}
+			// project phase
+			$data['SubmittalTypes'] = $this->getSubmittalTypes($row['project_phase'],$row['state']);
+			$reviewID = $row['reviewID'];
+			$projectID = $row['projectID'];
+		}
+
+		// get XML data
+		$dataview = $this->view_data($reviewID,$projectID,$search='');
+		$data['dataview'] = $dataview;
+
+		$template = "review.tpl";
+		$dir = "/review";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function open_review() {
+		$this->check_permissions('review');
+		$data['dotID'] = $_GET['dotID'];
+		$sql = "SELECT `id`,`dotproject` FROM `projects` WHERE `dotID` = '$_GET[dotID]'";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$options .= "<option value=\"$row[id]\">$row[dotproject]</option>";
+		}	
+		$data['options'] = $options;
+		$template = "open_reivew.tpl";
+		$dir = "/review";
+		$this->load_smarty($data,$template,$dir);	
+	}
+
+	public function upload_xml() {
+		$this->check_permissions('review');
+		$data['reviewID'] = $_GET['reviewID'];
+		$template = "upload_xml.tpl";
+		$dir = "/review";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function save_xml() {
+		$this->check_permissions('review');
+		$reviewID = $_POST['reviewID'];
+		$sql = "SELECT `projectID` FROM `review` WHERE `reviewID` = '$reviewID'";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$projectID = $row['projectID'];
+		}
+
+
+		$fileName = $_FILES['xml_file']['name'];
+		$tmpName  = $_FILES['xml_file']['tmp_name'];
+		$fileSize = $_FILES['xml_file']['size'];
+		$fileType = $_FILES['xml_file']['type'];
+		if ($fileName != "") {
+			// XML File upload
+			$file1 = date("U");
+			$file1 .= "_";
+			$file1 .= rand(10,100);
+			$file1 .= "_.xml";
+			move_uploaded_file($tmpName, "../uploads/$file1");
+			$this->process_xml($reviewID,$projectID,$file1);	
+
+			print "<div class=\"alert alert-success\">The XML file was added. Loading...</div>";
+			$result = $this->new_mysql($sql);
+			$redirect = "/review/" . $reviewID;
+			?>
+			<script>
+			setTimeout(function() {
+				window.location.replace('<?=$redirect;?>')
+			}
+			,2000);
+			</script>
+			<?php			
+		} else {
+			print "<div class=\"alert alert-danger\">You did not select a XML file. Loading...</div>";
+			$result = $this->new_mysql($sql);
+			$redirect = "/review/" . $reviewID;
+			?>
+			<script>
+			setTimeout(function() {
+				window.location.replace('<?=$redirect;?>')
+			}
+			,2000);
+			</script>
+			<?php			
+		}
+	}
+
+	private function process_xml($reviewID,$projectID,$xml_file) {
+
+		// get sequence number
+		$sql = "SELECT DISTINCT `series` FROM `xml_data` WHERE `projectID` = '$projectID' AND `reviewID` = '$reviewID' ORDER BY `series` DESC LIMIT 1";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$series = $row['series'];
+		}
+		$series = $series + 1;
+
+		$xml=simplexml_load_file("../uploads/$xml_file");
+		foreach ($xml->Markup as $dot) {
+			$Page_Label = $this->linkID->escape_string($dot->Page_Label);
+			$Author = $this->linkID->escape_string($dot->Author);
+			$Comments = $this->linkID->escape_string($dot->Comments);
+			$Category = $this->linkID->escape_string($dot->Category);
+			$Comment_Type = $this->linkID->escape_string($dot->Comment_Type);
+			$Discipline = $this->linkID->escape_string($dot->Discipline);
+			$Importance = $this->linkID->escape_string($dot->Importance);
+			$Cost_Reduction = $this->linkID->escape_string($dot->Cost_Reduction);
+
+
+			$sql = "INSERT INTO `xml_data` 
+			(`projectID`,`reviewID`,`series`,
+			`Page_Label`,`Author`,`Category`,`Comments`,
+			`Comment_Type`,`Discipline`,`Importance`,`Cost_Reduction`)
+			VALUES
+			('$projectID','$reviewID','$series',
+			'$Page_Label','$Author','$Category','$Comments',
+			'$Comment_Type','$Discipline','$Importance','$Cost_Reduction')
+			";
+			$result = $this->new_mysql($sql);
+		}
+	}
+
+	public function view_data($reviewID,$projectID,$search='') {
+		$this->check_permissions('review');	
+
+		// get latest series #
+		$series = "";
+		$sql = "
+		SELECT 
+			DISTINCT `series` 
+
+		FROM `xml_data` 
+
+		WHERE 
+			`projectID` = '$projectID' 
+			AND `reviewID` = '$reviewID' 
+
+		ORDER BY `series` DESC LIMIT 1
+		";
+
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$series = $row['series'];
+		}
+
+		if ($series != "") {
+			$sql = "
+			SELECT
+				`d`.`id`,
+				`d`.`Page_Label`,
+				`d`.`Author`,
+				`d`.`Comments`,
+				`d`.`Category`,
+				`d`.`Comment_Type`,
+				`d`.`Discipline`,
+				`d`.`Importance`,
+				`d`.`Cost_Reduction`
+
+			FROM
+				`xml_data` d
+
+			WHERE
+				`d`.`projectID` = '$projectID'
+				AND `d`.`reviewID` = '$reviewID'
+				AND `d`.`series` = '$series'
+			";
+			$result = $this->new_mysql($sql);
+			while ($row = $result->fetch_assoc()) {
+				foreach ($row as $key=>$value) {
+					$i = $row['id'];
+					$data[$i][$key] = $value;
+				}
+			}
+		}		
+		return($data);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/* OLD CODE BELOW */
+
+	/*
+	public function OLDreview() {
 		$this->check_permissions('review');
 
 		// ANSI 92 join
@@ -348,6 +676,7 @@ class review_functions extends admin_functions {
         </script>
 		<?php
 	}
+	*/
 
 } // class reports extends admin
 ?>

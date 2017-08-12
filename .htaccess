@@ -24,8 +24,17 @@ RewriteRule ^newuser/([a-zA-Z0-9]+)/?$ index.php?section=newuser&id=$1 [NC,L]
 RewriteRule ^edituser/([a-zA-Z0-9]+)/?$ index.php?section=edituser&id=$1 [NC,L]
 RewriteRule ^deleteuser/([a-zA-Z0-9]+)/?$ index.php?section=deleteuser&id=$1 [NC,L]
 RewriteRule ^user_states/([a-zA-Z0-9]+)/?$ index.php?section=user_states&id=$1 [NC,L]
+RewriteRule ^dots/([a-zA-Z0-9]+)/?$ index.php?section=manage_dot&id=$1 [NC,L]
+RewriteRule ^new_project/([a-zA-Z0-9]+)/?$ index.php?section=new_project&id=$1 [NC,L]
+RewriteRule ^new_review/([a-zA-Z0-9]+)/?$ index.php?section=new_review&dotID=$1 [NC,L]
+RewriteRule ^review/([a-zA-Z0-9]+)/?$ index.php?section=review&reviewID=$1 [NC,L]
+RewriteRule ^upload_xml/([a-zA-Z0-9]+)/?$ index.php?section=upload_xml&reviewID=$1 [NC,L]
+RewriteRule ^open_review/([a-zA-Z0-9]+)/?$ index.php?section=open_review&dotID=$1 [NC,L]
+
+
 # Three
 RewriteRule ^updatedata/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=updatedata&projectID=$1&id=$2 [NC,L]
+RewriteRule ^projects/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=projects&dotID=$1&projectID=$2 [NC,L]
 
 # Page Sorting
 

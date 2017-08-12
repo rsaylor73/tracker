@@ -20,6 +20,8 @@
     <link href="/css/heroic-features.css" rel="stylesheet">
     <link href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
 
+    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -41,6 +43,8 @@
   src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"
   integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk="
   crossorigin="anonymous"></script>
+
+  <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -92,12 +96,7 @@ Show_Countdown();
                     <li>
                         <a href="/projects">Projects</a>
                     </li>
-                    <li>
-                        <a href="/review">Review</a>
-                    </li>
-                    <li>
-                        <a href="/reports">Reports</a>
-                    </li>
+                    
                     <li>
                         <a href="/users">Users</a>
                     </li>

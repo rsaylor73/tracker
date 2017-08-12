@@ -34,6 +34,14 @@ if ($_POST['section'] != "") {
 }
 
 switch ($section) {
+
+        case "new_project":
+        case "new_review":
+        case "upload_xml":
+        case "open_review":
+        // none
+        break;
+        
         default:
         $smarty->display('header.tpl');
         break;
@@ -62,6 +70,14 @@ if ($section == "login") {
 }
 
 switch ($section) {
+
+        case "new_project":
+        case "new_review":
+        case "upload_xml":
+        case "open_review":
+        // none
+        break;
+        
         default:
         $date = date("Y");
         $smarty->assign('date',$date);

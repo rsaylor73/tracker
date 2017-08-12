@@ -26,7 +26,17 @@
     	<div class="col-sm-3"><input type="text" name="password" class="form-control"></div>
     </div>
     <div class="row top-buffer">
-    	<div class="col-sm-6 alert alert-info">Each group inherits each other. Projects would include Reviews and Reports. Reviews would include Reports, etc. Admin includes all and Reports include only Reports.</div>
+        <div class="col-sm-3">User Type:</div>
+        <div class="col-sm-3">
+            <select name="userType" class="form-control" required>
+                <option value="">Select</option>
+                <option>staff</option>
+                <option>client</option>
+            </select>
+        </div>
+    </div>
+    <div class="row top-buffer">
+    	<div class="col-sm-6 alert alert-info"><b>Staff Only</b> : Each group inherits each other. Projects would include Reviews and Reports. Reviews would include Reports, etc. Admin includes all and Reports include only Reports.</div>
     </div>
     <div class="row top-buffer">
     	<div class="col-sm-3">Group Access:</div>
@@ -36,6 +46,7 @@
     			<option value="3">Reviews</option>
     			<option value="4">Reports</option>
     			<option value="1">Admin</option>
+                <option value="5">N/A</option>
     		</select>
     	</div>
     </div>

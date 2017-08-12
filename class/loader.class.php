@@ -25,6 +25,10 @@ class loader extends projects_functions {
             $this->$module();
         } elseif (method_exists('common_functions',$module)) {
             $this->$module();
+        } elseif (method_exists('dot_functions', $module)) {
+            $this->$module();
+        } elseif (method_exists('client_functions', $module)) {
+            $this->$module();
         } elseif (method_exists('JWT',$module)) {
             $this->$module();
         } elseif (method_exists('core',$module)) {
