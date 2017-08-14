@@ -151,9 +151,203 @@ class review_functions extends admin_functions {
 		$dataview = $this->view_data($reviewID,$projectID,$search='');
 		$data['dataview'] = $dataview;
 
+		// charts
+		$cdata = $this->generate_stacked_data($projectID,$reviewID);
+		$chart_data = $cdata['chart_data'];
+		$chart_category = $cdata['chart_category'];
+		$stacked_column = $this->stacked_column('container1',$chart_category,'Comment Distribution','Distribution',$chart_data);
+		print "$stacked_column";
+
+		$chart_data = $this->generate_pie_data($projectID,$reviewID,'Category');
+		$pie2 = $this->pie_chart('container2','Categories',$chart_data);
+		print "$pie2";
+
+		$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Biddability');		
+		$pie3 = $this->pie_chart('container3','Biddability',$chart_data);
+		print "$pie3";
+
+		$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Constructability');		
+		$pie4 = $this->pie_chart('container4','Constructability',$chart_data);
+		print "$pie4";
+
 		$template = "review.tpl";
 		$dir = "/review";
 		$this->load_smarty($data,$template,$dir);
+	}
+
+	private function generate_pie_data($projectID,$reviewID,$key) {
+		$sql = "SELECT DISTINCT `series` FROM `xml_data` WHERE `projectID` = '$projectID' 
+		AND `reviewID` = '$reviewID' ORDER BY `series` DESC LIMIT 1";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$series = $row['series'];
+		}
+
+		if ($filter != "") {
+			$search = "AND `x`.`$key` = '$filter'";
+		}
+
+		// get category data:
+		$sql = "
+		SELECT
+			DISTINCT `x`.`$key`
+		
+		FROM
+			`xml_data` x
+
+		WHERE
+			`x`.`projectID` = '$projectID'
+			AND `x`.`reviewID` = '$reviewID'
+			AND `x`.`series` = '$series'
+			AND `x`.`Category` != ''
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$cat_sql .= "COUNT(CASE WHEN `$key` = '".$row[$key]."' 
+			THEN `$key` END) AS '".$row[$key]."',";
+			$categories[] = $row[$key];
+		}
+		$cat_sql = substr($cat_sql, 0,-1);
+
+		$sql = "
+		SELECT
+			COUNT(`x`.`$key`) AS 'total',
+			$cat_sql
+
+		FROM
+			`xml_data` x
+
+		WHERE
+			`x`.`projectID` = '$projectID'
+			AND `x`.`reviewID` = '$reviewID'
+			AND `x`.`series` = '$series'
+			AND `x`.`Category` != ''
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			foreach ($categories as $key=>$value) {
+				$chart_data .= "{name: '".$value."',y: ".$row[$value]."},";
+			}
+		}
+		$chart_data = substr($chart_data,0,-1);
+		return($chart_data);
+	}
+
+	private function generate_pie_data_special($projectID,$reviewID,$key,$key2,$search) {
+		$sql = "SELECT DISTINCT `series` FROM `xml_data` WHERE `projectID` = '$projectID' 
+		AND `reviewID` = '$reviewID' ORDER BY `series` DESC LIMIT 1";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$series = $row['series'];
+		}
+
+		// get category data:
+		$sql = "
+		SELECT
+			DISTINCT `x`.`$key`
+		
+		FROM
+			`xml_data` x
+
+		WHERE
+			`x`.`projectID` = '$projectID'
+			AND `x`.`reviewID` = '$reviewID'
+			AND `x`.`series` = '$series'
+			AND `x`.`Category` != ''
+			AND `x`.`$key2` = '$search'
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$cat_sql .= "COUNT(CASE WHEN `$key` = '".$row[$key]."' 
+			THEN `$key` END) AS '".$row[$key]."',";
+			$categories[] = $row[$key];
+		}
+		$cat_sql = substr($cat_sql, 0,-1);
+
+		$sql = "
+		SELECT
+			COUNT(`x`.`$key`) AS 'total',
+			$cat_sql
+
+		FROM
+			`xml_data` x
+
+		WHERE
+			`x`.`projectID` = '$projectID'
+			AND `x`.`reviewID` = '$reviewID'
+			AND `x`.`series` = '$series'
+			AND `x`.`Category` != ''
+			AND `x`.`$key2` = '$search'
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			foreach ($categories as $key=>$value) {
+				$chart_data .= "{name: '".$value."',y: ".$row[$value]."},";
+			}
+		}
+		$chart_data = substr($chart_data,0,-1);
+		return($chart_data);
+	}
+	private function generate_stacked_data($projectID,$reviewID) {
+
+		$sql = "SELECT DISTINCT `series` FROM `xml_data` WHERE `projectID` = '$projectID' 
+		AND `reviewID` = '$reviewID' ORDER BY `series` DESC LIMIT 1";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$series = $row['series'];
+		}
+
+		$sql = "
+		SELECT
+			`x`.`Category`,
+			`x`.`Discipline`
+
+		FROM
+			`xml_data` x
+
+		WHERE
+			`x`.`projectID` = '$projectID'
+			AND `x`.`reviewID` = '$reviewID'
+			AND `x`.`series` = '$series'
+			AND `x`.`Category` != ''
+			AND `x`.`Discipline` != ''
+
+		ORDER BY `x`.`Category` ASC, `x`.`Discipline` ASC
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$category = $row['Category'];
+			$discipline = $row['Discipline'];
+			$list[] = $row['Discipline'];
+			$chart[$category][$discipline]++;
+		}
+
+		foreach ($chart as $key=>$value) {
+			$chart_category .= "'$key',";
+		}
+		$chart_category = substr($chart_category,0,-1);
+
+		sort($list);
+		$list = array_unique($list);
+
+		foreach ($chart as $cat=>$b) {
+			foreach ($list as $ignore=>$disc) {
+				$i = $chart[$cat][$disc];
+				if ($i == "") {
+					$i = "0";
+				}
+				$r[$disc] .= "$i,";
+			}
+		}
+
+		foreach ($r as $key=>$value) {
+			$value = substr($value,0,-1);
+			$chart_data .= "{name:'$key',data: [$value]},";
+		}
+		$chart_data = substr($chart_data,0,-1);
+		$data['chart_data'] = $chart_data;
+		$data['chart_category'] = $chart_category;
+		return($data);
 	}
 
 	public function open_review() {
@@ -176,6 +370,114 @@ class review_functions extends admin_functions {
 		$template = "upload_xml.tpl";
 		$dir = "/review";
 		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function upload_pdf() {
+		$this->check_permissions('review');
+		$data['reviewID'] = $_GET['reviewID'];
+		$template = "upload_pdf.tpl";
+		$dir = "/review";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function upload_cost() {
+		$this->check_permissions('review');
+		$data['reviewID'] = $_GET['reviewID'];
+		$template = "upload_cost.tpl";
+		$dir = "/review";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function save_pdf() {
+		$this->check_permissions('review');
+		$reviewID = $_POST['reviewID'];
+		$fileName = $_FILES['pdf_file']['name'];
+		$tmpName  = $_FILES['pdf_file']['tmp_name'];
+		$fileSize = $_FILES['pdf_file']['size'];
+		$fileType = $_FILES['pdf_file']['type'];
+		if ($fileName != "") {
+			$file1 = date("U");
+			$file1 .= "_";
+			$file1 .= rand(10,100);
+			$file1 .= "_.pdf";
+			move_uploaded_file($tmpName, "../uploads/$file1");
+			$sql = "UPDATE `review` SET 
+			`pdf_file_server` = '$file1',
+			`pdf_file_client` = '$fileName',
+			`pdf_file_size` = '$fileSize',
+			`pdf_file_type` = '$fileType'
+			WHERE `reviewID` = '$reviewID'
+			";
+			print "<div class=\"alert alert-success\">The PDF file was added. Loading...</div>";
+			$result = $this->new_mysql($sql);
+			$redirect = "/review/" . $reviewID;
+			?>
+			<script>
+			setTimeout(function() {
+				window.location.replace('<?=$redirect;?>')
+			}
+			,2000);
+			</script>
+			<?php	
+		} else {
+			print "<div class=\"alert alert-danger\">You did not select a PDF file. Loading...</div>";
+			$result = $this->new_mysql($sql);
+			$redirect = "/review/" . $reviewID;
+			?>
+			<script>
+			setTimeout(function() {
+				window.location.replace('<?=$redirect;?>')
+			}
+			,2000);
+			</script>
+			<?php			
+		}
+	}
+
+	public function save_cost() {
+		$this->check_permissions('review');
+		$reviewID = $_POST['reviewID'];
+		$fileName = $_FILES['cost_file']['name'];
+		$tmpName  = $_FILES['cost_file']['tmp_name'];
+		$fileSize = $_FILES['cost_file']['size'];
+		$fileType = $_FILES['cost_file']['type'];
+		if ($fileName != "") {
+			$file1 = date("U");
+			$file1 .= "_";
+			$file1 .= rand(10,100);
+			$file1 .= "_.pdf";
+			move_uploaded_file($tmpName, "../uploads/$file1");
+			$sql = "UPDATE `review` SET 
+			`cost_file_server` = '$file1',
+			`cost_file_client` = '$fileName',
+			`cost_file_size` = '$fileSize',
+			`cost_file_type` = '$fileType'
+			WHERE `reviewID` = '$reviewID'
+			";
+			print "<div class=\"alert alert-success\">The Cost Reduction file was added. Loading...</div>";
+			$result = $this->new_mysql($sql);
+			$redirect = "/review/" . $reviewID;
+			?>
+			<script>
+			setTimeout(function() {
+				window.location.replace('<?=$redirect;?>')
+			}
+			,2000);
+			</script>
+			<?php	
+		} else {
+			print "<div class=\"alert alert-danger\">You did not select a Cost Reduction file. Loading...</div>";
+			$result = $this->new_mysql($sql);
+			$redirect = "/review/" . $reviewID;
+			?>
+			<script>
+			setTimeout(function() {
+				window.location.replace('<?=$redirect;?>')
+			}
+			,2000);
+			</script>
+			<?php			
+		}
 	}
 
 	public function save_xml() {

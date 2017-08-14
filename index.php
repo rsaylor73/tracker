@@ -38,6 +38,8 @@ switch ($section) {
         case "new_project":
         case "new_review":
         case "upload_xml":
+        case "upload_pdf":
+        case "upload_cost":
         case "open_review":
         // none
         break;
@@ -74,6 +76,8 @@ switch ($section) {
         case "new_project":
         case "new_review":
         case "upload_xml":
+        case "upload_pdf":
+        case "upload_cost":
         case "open_review":
         // none
         break;
