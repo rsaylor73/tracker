@@ -83,7 +83,7 @@ class projects_functions extends reports_functions {
 		$result = $this->new_mysql($sql);
 		$projectID = $this->linkID->insert_id;
 		//$this->process_xml($projectID);
-		$redirect = "/dots/$_POST[dotID]";
+		$redirect = "/projects/$_POST[dotID]/$projectID";
 		print '<div class="alert alert-success">The project was created. Loading...</div>';
 		?>
 		<script>
@@ -95,8 +95,97 @@ class projects_functions extends reports_functions {
 		<?php
 	}
 
+	public function list_project() {
+		$this->check_permissions('newproject');
+
+		$sql = "
+		SELECT
+			`c`.`id`,
+			`c`.`first`,
+			`c`.`last`,
+			`c`.`email`
+
+		FROM
+			`dots` d, `contacts` c
+
+		WHERE
+			`d`.`id` = '$_GET[dotID]'
+			AND `d`.`stateID` = `c`.`stateID`
+
+		ORDER BY `c`.`last` ASC, `c`.`first` ASC
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$contacts .= "<option value=\"$row[id]\">$row[first] $row[last]</option>";
+		}
+
+		$sql = "SELECT `stateID` FROM `dots` WHERE `id` = '$_GET[dotID]'";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$stateID = $row['stateID'];
+		}
+		$sql = "SELECT `state` FROM `state` WHERE `state_id` = '$stateID'";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$state = $row['state'];
+		}
+
+		$sql = "SELECT `id`,`dotproject` FROM `projects` WHERE `dotID` = '$_GET[dotID]' ORDER BY `dotproject` ASC";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$dotproject .= "<option value=\"$row[id]\">$row[dotproject]</option>";
+		}
+
+		$data['dotproject'] = $dotproject;
+		$data['dotID'] = $_GET['dotID'];
+		$data['projecttype'] = $this->getProjectTypes($projecttypeID);
+		$data['region'] = $this->getRegion($regionID,$state);
+		$data['contacts'] = $contacts;
+
+		$year = date("Y");
+		$p_year = $year - 1;
+		$n_year = $year + 1;
+
+		$year_select = "
+		<option>$p_year</option>
+		<option>$year</option>
+		<option>$n_year</option>
+		";
+		$data['year_select'] = $year_select;
+
+		$template = "list_projects.tpl";
+		$dir = "/projects";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+	public function search_project() {
+		$this->check_permissions('review');
+
+		$sql = "
+		SELECT
+			`d`.`logo`
+
+		FROM
+			`dots` d
+
+		WHERE
+			`d`.`id` = '$_POST[dotID]'
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$data['logo'] = $row['logo'];
+		}
 
 
+
+		$template = "search_project.tpl";
+		$dir = "/projects";
+		$this->load_smarty($data,$template,$dir);
+
+		print "<pre>";
+		print_r($_POST);
+		print "</pre>";
+	}
 
 } // class projects extends reports
 ?>

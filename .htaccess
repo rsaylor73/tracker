@@ -32,7 +32,7 @@ RewriteRule ^upload_xml/([a-zA-Z0-9]+)/?$ index.php?section=upload_xml&reviewID=
 RewriteRule ^upload_pdf/([a-zA-Z0-9]+)/?$ index.php?section=upload_pdf&reviewID=$1 [NC,L]
 RewriteRule ^upload_cost/([a-zA-Z0-9]+)/?$ index.php?section=upload_cost&reviewID=$1 [NC,L]
 RewriteRule ^open_review/([a-zA-Z0-9]+)/?$ index.php?section=open_review&dotID=$1 [NC,L]
-
+RewriteRule ^list_project/([a-zA-Z0-9]+)/?$ index.php?section=list_project&dotID=$1 [NC,L]
 
 # Three
 RewriteRule ^updatedata/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=updatedata&projectID=$1&id=$2 [NC,L]

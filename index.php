@@ -41,6 +41,7 @@ switch ($section) {
         case "upload_pdf":
         case "upload_cost":
         case "open_review":
+        case "list_project":
         // none
         break;
         
@@ -79,6 +80,7 @@ switch ($section) {
         case "upload_pdf":
         case "upload_cost":
         case "open_review":
+        case "list_project":
         // none
         break;
         

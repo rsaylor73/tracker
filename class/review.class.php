@@ -152,23 +152,34 @@ class review_functions extends admin_functions {
 		$data['dataview'] = $dataview;
 
 		// charts
-		$cdata = $this->generate_stacked_data($projectID,$reviewID);
-		$chart_data = $cdata['chart_data'];
-		$chart_category = $cdata['chart_category'];
-		$stacked_column = $this->stacked_column('container1',$chart_category,'Comment Distribution','Distribution',$chart_data);
-		print "$stacked_column";
+		$found_data = "0";
+		$sql = "SELECT `series` FROM `xml_data` WHERE `projectID` = '$projectID' 
+		AND `reviewID` = '$reviewID' LIMIT 1";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$found_data = "1";
+		}
+		if ($found_data == "1") {
+			$cdata = $this->generate_stacked_data($projectID,$reviewID);
+			$chart_data = $cdata['chart_data'];
+			$chart_category = $cdata['chart_category'];
+			$stacked_column = $this->stacked_column('container1',$chart_category,'Comment Distribution','Distribution',$chart_data);
+			print "$stacked_column";
 
-		$chart_data = $this->generate_pie_data($projectID,$reviewID,'Category');
-		$pie2 = $this->pie_chart('container2','Categories',$chart_data);
-		print "$pie2";
+			$chart_data = $this->generate_pie_data($projectID,$reviewID,'Category');
+			$pie2 = $this->pie_chart('container2','Categories',$chart_data);
+			print "$pie2";
 
-		$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Biddability');		
-		$pie3 = $this->pie_chart('container3','Biddability',$chart_data);
-		print "$pie3";
+			$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Biddability');		
+			$pie3 = $this->pie_chart('container3','Biddability',$chart_data);
+			print "$pie3";
 
-		$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Constructability');		
-		$pie4 = $this->pie_chart('container4','Constructability',$chart_data);
-		print "$pie4";
+			$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Constructability');		
+			$pie4 = $this->pie_chart('container4','Constructability',$chart_data);
+			print "$pie4";
+		} else {
+			$data['no_charts'] = "1";
+		}
 
 		$template = "review.tpl";
 		$dir = "/review";

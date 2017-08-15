@@ -125,6 +125,7 @@
     </div>
 
     <div class="jumbotron">
+        {if $no_charts ne "1"}
         <div class="row top-buffer">
             <div class="col-sm-6">
                 <div id="container1" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
@@ -142,6 +143,13 @@
                 <div id="container4" style="min-width: 200px; height: 400px; margin: 0 auto"></div>
             </div>
         </div>
+        {else}
+        <div class="row top-buffer">
+            <div class="col-sm-12 alert alert-info">
+                Upload an XML file to generate charts 
+            </div>
+        </div>
+        {/if}
 
     </div>
 
@@ -182,7 +190,7 @@
            <div class="modal-content">
                <div class="modal-header">
                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"></h4>
+                    <h4 class="modal-title">Loading please wait...</h4>
 
                </div>
                <div class="modal-body"><div class="te"></div></div>

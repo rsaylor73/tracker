@@ -37,7 +37,14 @@
 
 <div class="row text-center">
 	<div class="col-sm-3">
-		<input type="button" value="List Projects" class="btn btn-lg btn-primary btn-block">
+
+    <a data-toggle="modal" 
+    style="text-decoration:none; color:#FFFFFF;"
+    href="/list_project/{$id}" 
+    data-target="#myModal" data-backdrop="static" data-keyboard="false" 
+    class="btn btn-primary btn-lg btn-block" 
+    >List Projects</a>
+
 	</div>
 	<div class="col-sm-3">
 
