@@ -3,6 +3,36 @@ include PATH."/class/review.class.php";
 
 class reports_functions extends review_functions {
 
+	public function view_report() {
+		$this->check_permissions('reports');
+
+		$sql = "
+		SELECT
+			`d`.`logo`
+
+		FROM
+			`dots` d
+
+		WHERE
+			`d`.`id` = '$_POST[dotID]'
+		";
+
+
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$data['logo'] = $row['logo'];
+		}
+
+		$template = "view_report.tpl";
+		$dir = "/report";
+		$this->load_smarty($data,$template,$dir);
+
+		print "<pre>";
+		print_r($_POST);
+		print "</pre>";
+	}
+
+	/*
 	public function reports() {
 		$this->check_permissions('reports');
 
@@ -120,6 +150,7 @@ class reports_functions extends review_functions {
 		$template = "viewreport.tpl";
 		$this->load_smarty($data,$template,$dir);
 	}
+	*/
 
 } // class reports extends admin
 ?>

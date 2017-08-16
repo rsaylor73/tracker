@@ -174,17 +174,103 @@ class projects_functions extends reports_functions {
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {
 			$data['logo'] = $row['logo'];
+			$data['dotID'] = $_POST['dotID'];
 		}
 
+		// filters
+		if ($_POST['region'] != "") {
+			$s1 = "AND `r`.`id` = '$_POST[region]'";
+		}
+
+		if ($_POST['dotproject'] != "") {
+			$s2 = "AND `p`.`id` = '$_POST[dotproject]'";
+		}
+
+		if (($_POST['start_date'] != "") && ($_POST['end_date'] != "")) {
+			$date1 = date("Y-m-d", strtotime($_POST['start_date']));
+			$date2 = date("Y-m-d", strtotime($_POST['end_date']));
+			$s3 = "AND `p`.`est_ad_date` BETWEEN '$date1' AND '$date2'";
+		}
+
+		if ($_POST['year'] != "") {
+			$s4 = "AND DATE_FORMAT(`p`.`est_ad_date`,'%Y') = '$_POST[year]'";
+		}
+
+		if ($_POST['quarter'] != "") {
+			$year = date("Y");
+			switch ($_POST['quarter']) {
+				case "1":
+					$date1 = $year . "-01-01";
+					$date2 = $year . "-03-31";
+				break;
+
+				case "2":
+					$date1 = $year . "-04-01";
+					$date2 = $year . "-06-30";
+				break;
+
+				case "3":
+					$date1 = $year . "-07-01";
+					$date2 = $year . "-09-30";
+				break;
+
+				case "4":
+					$date1 = $year . "-10-01";
+					$date2 = $year . "-12-31";
+				break;
+			}
+			$s4 = "AND `p`.`est_ad_date` BETWEEN '$date1' AND '$date2'";
+		}
+
+		if ($_POST['project_type'] != "") {
+			$s5 = "AND `p`.`projecttypeID` = '$_POST[project_type]'";
+		}
+
+		if ($_POST['contactID'] != "") {
+			$s6 = "AND `p`.`contactID` = '$_POST[contactID]'";
+		}
+
+		// query data
+		$sql = "
+		SELECT
+			`p`.`id`,
+			`p`.`dotproject`,
+			`p`.`subaccount`,
+			`p`.`projecttypeID`,
+			`pt`.`project_type`,
+			`p`.`regionID`,
+			`r`.`name` AS 'region_name',
+			`p`.`description`
+
+		FROM
+			`projects` p,
+			`project_type` pt,
+			`region` r
+
+		WHERE
+			`p`.`dotID` = '$_POST[dotID]'
+			AND `p`.`projecttypeID` = `pt`.`id`
+			AND `p`.`regionID` = `r`.`id`
+			$s1
+			$s2
+			$s3
+			$s4
+			$s5
+			$s6
+		";
+
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$i = $row['id'];
+			foreach ($row as $key=>$value) {
+				$data['results'][$i][$key] = $value;
+			}
+		}
 
 
 		$template = "search_project.tpl";
 		$dir = "/projects";
 		$this->load_smarty($data,$template,$dir);
-
-		print "<pre>";
-		print_r($_POST);
-		print "</pre>";
 	}
 
 } // class projects extends reports
