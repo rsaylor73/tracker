@@ -42,10 +42,16 @@ switch ($section) {
         case "upload_cost":
         case "open_review":
         case "list_project":
+        case "client_load_project":
+        case "client_list_project":
+        case "client_upload_file":
         // none
         break;
         
         default:
+        if ($_SESSION['groupID'] == "1") {
+                $smarty->assign('admin','1');
+        }
         $smarty->display('header.tpl');
         break;
 }
@@ -81,6 +87,9 @@ switch ($section) {
         case "upload_cost":
         case "open_review":
         case "list_project":
+        case "client_load_project":
+        case "client_list_project":
+        case "client_upload_file":
         // none
         break;
         

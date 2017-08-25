@@ -16,6 +16,30 @@ if ($logged == "TRUE") {
 		$sql = "UPDATE `projects` SET `subaccount` = '$_GET[subaccount]' WHERE `id` = '$_GET[projectID]'";
 		break;
 
+		case "projecttypeID": // view project
+		$sql = "UPDATE `projects` SET `projecttypeID` = '$_GET[projecttypeID]' WHERE `id`= ' $_GET[projectID]'";
+		break;
+
+		case "description": // view project
+		$sql = "UPDATE `projects` SET `description` = '$_GET[description]' WHERE `id` = '$_GET[projectID]'";
+		break;
+
+		case "est_const_cost": // view project
+		$sql = "UPDATE `projects` SET `est_const_cost` = '$_GET[est_const_cost]' WHERE `id` = '$_GET[projectID]'";
+		break;
+
+		case "est_ad_date": // view project
+		$sql = "UPDATE `projects` SET `est_ad_date` = '$_GET[est_ad_date]' WHERE `id` = '$_GET[projectID]'";
+		break;
+
+		case "regionID": // view project
+		$sql = "UPDATE `projects` SET `regionID` = '$_GET[regionID]' WHERE `id` = '$_GET[projectID]'";
+		break;
+
+		case "contactID": // view project
+		$sql = "UPDATE `projects` SET `contactID` = '$_GET[contacts]' WHERE `id` = '$_GET[projectID]'";
+		break;
+
 		case "Project Phase":
 		$sql = "UPDATE `review` SET `project_phase` = '$_GET[project_phase]' WHERE `reviewID` = '$_GET[reviewID]'";
 		break;
@@ -40,9 +64,9 @@ if ($logged == "TRUE") {
 
 		<script>
 		$(document).ready (function(){
-			$("#success-alert").alert();
-	        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
-	        	$("#success-alert").slideUp(500);
+			$("#success-alertNO").alert();
+	        $("#success-alertNO").fadeTo(2000, 500).slideUp(500, function(){
+	        	$("#success-alertNO").slideUp(500);
 	        	});
 		});
 		</script>
@@ -53,9 +77,9 @@ if ($logged == "TRUE") {
 
 		<script>
 		$(document).ready (function(){
-			$("#danger-alert").alert();
-	        $("#danger-alert").fadeTo(2000, 500).slideUp(500, function(){
-	        	$("#danger-alert").slideUp(500);
+			$("#danger-alertNO").alert();
+	        $("#danger-alertNO").fadeTo(2000, 500).slideUp(500, function(){
+	        	$("#danger-alertNO").slideUp(500);
 	        	});
 		});
 		</script>

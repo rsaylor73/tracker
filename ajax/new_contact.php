@@ -13,6 +13,9 @@ if ($logged == "TRUE") {
 	?>
 	<form name="myform2">
 	<input type="hidden" name="dotID" value="<?=$_GET['dotID']?>">
+	<input type="hidden" name="mode" value="<?=$_GET['mode']?>">
+	<input type="hidden" name="projectID" value="<?=$_GET['projectID']?>">
+	
 	<div class="row top-buffer">
 		<div class="col-sm-6">
 			<input type="text" name="first" placeholder="First Name" class="form-control">

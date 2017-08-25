@@ -33,6 +33,14 @@ RewriteRule ^upload_pdf/([a-zA-Z0-9]+)/?$ index.php?section=upload_pdf&reviewID=
 RewriteRule ^upload_cost/([a-zA-Z0-9]+)/?$ index.php?section=upload_cost&reviewID=$1 [NC,L]
 RewriteRule ^open_review/([a-zA-Z0-9]+)/?$ index.php?section=open_review&dotID=$1 [NC,L]
 RewriteRule ^list_project/([a-zA-Z0-9]+)/?$ index.php?section=list_project&dotID=$1 [NC,L]
+RewriteRule ^view_project/([a-zA-Z0-9]+)/?$ index.php?section=view_project&id=$1 [NC,L]
+RewriteRule ^client_load_project/([a-zA-Z0-9]+)/?$ index.php?section=client_load_project&id=$1 [NC,L]
+RewriteRule ^client_view_project/([a-zA-Z0-9]+)/?$ index.php?section=client_view_project&id=$1 [NC,L]
+RewriteRule ^client_review/([a-zA-Z0-9]+)/?$ index.php?section=client_review&reviewID=$1 [NC,L]
+RewriteRule ^client_list_project/([a-zA-Z0-9]+)/?$ index.php?section=client_list_project&dotID=$1 [NC,L]
+RewriteRule ^client_upload_file/([a-zA-Z0-9]+)/?$ index.php?section=client_upload_file&id=$1 [NC,L]
+RewriteRule ^deletereview/([a-zA-Z0-9]+)/?$ index.php?section=deletereview&reviewID=$1 [NC,L]
+RewriteRule ^deleteproject/([a-zA-Z0-9]+)/?$ index.php?section=deleteproject&id=$1 [NC,L]
 
 # Three
 RewriteRule ^updatedata/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/?$ index.php?section=updatedata&projectID=$1&id=$2 [NC,L]
@@ -86,7 +94,6 @@ RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Disci
 RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Importance/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Importance&direction=$4 [NC,L]
 
 RewriteRule ^viewreview/([a-zA-Z0-9]+)/pages/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/Cost_Reduction/([a-zA-Z0-9]+)/?$ index.php?section=viewreview&projectID=$1&page=$2&stop=$3&field=Cost_Reduction&direction=$4 [NC,L]
-
 
 
 

@@ -160,9 +160,9 @@ class common_functions extends dot_functions {
 		while ($row = $result->fetch_assoc()) {
 			if ($category != $row['category']) {
 				if ($category != "") {
-					$option .= "</optgroup>";
+					//$option .= "</optgroup>";
 				}
-				$option .= "<optgroup label=\"$row[category]\">";
+				//$option .= "<optgroup label=\"$row[category]\">";
 				$category = $row['category'];
 			}
 			if ($row['id'] == $id) {
@@ -171,7 +171,7 @@ class common_functions extends dot_functions {
 				$option .= "<option value=\"$row[id]\">$row[Description]</option>";
 			}
 		}
-		$option .= "</optgroup>";
+		//$option .= "</optgroup>";
 		return($option);
 	} // getSubmittalTypes($id='')
 
@@ -211,9 +211,9 @@ class common_functions extends dot_functions {
 		while ($row = $result->fetch_assoc()) {
 			if ($category != $row['category']) {
 				if ($category != "") {
-					$option .= "</optgroup>";
+					//$option .= "</optgroup>";
 				}
-				$option .= "<optgroup label=\"$row[category]\">";
+				//$option .= "<optgroup label=\"$row[category]\">";
 				$category = $row['category'];
 			}
 			if ($row['id'] == $id) {
@@ -222,7 +222,7 @@ class common_functions extends dot_functions {
 				$option .= "<option value=\"$row[id]\">$row[name]</option>";
 			}			
 		}
-		$option .= "</optgroup>";
+		//$option .= "</optgroup>";
 		return($option);
 	}
 

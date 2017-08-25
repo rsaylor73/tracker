@@ -20,6 +20,8 @@ if ($logged == "TRUE") {
 	WHERE
 		`r`.`projectID` = '$_GET[dotproject]'
 		AND `r`.`project_phase` = `s`.`id`
+
+	ORDER BY `s`.`Description` ASC
 	";
 	$result = $core->new_mysql($sql);
 	while ($row = $result->fetch_assoc()) {

@@ -158,6 +158,8 @@ class projects_functions extends reports_functions {
 		$this->load_smarty($data,$template,$dir);
 	}
 
+
+
 	public function search_project() {
 		$this->check_permissions('review');
 
@@ -272,6 +274,139 @@ class projects_functions extends reports_functions {
 		$dir = "/projects";
 		$this->load_smarty($data,$template,$dir);
 	}
+
+	public function deleteproject() {
+		$this->check_permissions('newproject');
+		$sql = "DELETE FROM `review` WHERE `projectID` = '$_GET[id]'";
+		$result = $this->new_mysql($sql);
+
+		$sql = "DELETE FROM `projects` WHERE `id` = '$_GET[id]'";
+		$result = $this->new_mysql($sql);
+
+		$sql = "DELETE FROM `xml_data` WHERE `projectID` = '$_GET[id]'";
+		$result = $this->new_mysql($sql);
+
+		print "<div class=\"alert alert-success\">The project has been deleted. Click home to goto the homepage.</div>";
+		
+	}
+
+	public function view_project() {
+		$this->check_permissions('newproject');
+
+		$sql = "
+		SELECT
+			`p`.`id` AS 'projectID',
+			`p`.`dotproject`,
+			`p`.`subaccount`,
+			`p`.`projecttypeID`,
+			`p`.`description`,
+			`p`.`est_const_cost`,
+			`p`.`est_ad_date`,
+			`p`.`regionID`,
+			`p`.`contactID`,
+			`d`.`logo`,
+			`d`.`id` AS 'dotID'
+
+		FROM
+			`projects` p,
+			`dots` d
+
+		WHERE
+			`p`.`id` = '$_GET[id]'
+			AND `p`.`dotID` = `d`.`id`
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			foreach($row as $key=>$value) {
+				$data[$key] = $value;
+			}
+			$dotID = $row['dotID'];
+			$contactID = $row['contactID'];
+			$projecttypeID = $row['projecttypeID'];
+			$regionID = $row['regionID'];
+			$projectID = $row['projectID'];
+		}
+
+		// contact
+		$sql = "SELECT `c`.* FROM `contacts` c WHERE `c`.`id` = '$contactID'";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$c_found = "1";
+			$contacts .= "<option selected value=\"$row[id]\">$row[first] $row[last]</option>";
+		}
+		if ($c_found != "1") {
+			$contacts .= "<option value=\"\" selected>Select</option>";
+		}
+
+		$sql = "
+		SELECT
+			`c`.`id`,
+			`c`.`first`,
+			`c`.`last`,
+			`c`.`email`
+
+		FROM
+			`dots` d, `contacts` c
+
+		WHERE
+			`d`.`id` = '$dotID'
+			AND `d`.`stateID` = `c`.`stateID`
+
+		ORDER BY `c`.`last` ASC, `c`.`first` ASC
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$contacts .= "<option value=\"$row[id]\">$row[first] $row[last]</option>";
+		}
+
+		$sql = "SELECT `stateID` FROM `dots` WHERE `id` = '$dotID'";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$stateID = $row['stateID'];
+		}
+		$sql = "SELECT `state` FROM `state` WHERE `state_id` = '$stateID'";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$state = $row['state'];
+		}
+
+		$data['projecttype'] = $this->getProjectTypes($projecttypeID);
+		$data['region'] = $this->getRegion($regionID,$state);
+		$data['contacts'] = $contacts;
+
+
+		// locate reviews
+		$sql = "
+		SELECT
+			`s`.`Description`,
+			`r`.`reviewID` AS 'id'
+		FROM
+			`review` r,
+			`SubmittalTypes` s
+
+		WHERE
+			`r`.`projectID` = '$projectID'
+			AND `r`.`project_phase` = `s`.`id`
+		";
+		$i = "0";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$r_found = "1";
+			foreach ($row as $key=>$value) {
+				$data['review'][$i][$key] = $value;
+			}
+			$i++;
+		}
+		if ($r_found != "1") {
+			$data['r_error'] = "1";
+		}
+
+		$template = "view_project.tpl";
+		$dir = "/projects";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+
 
 } // class projects extends reports
 ?>

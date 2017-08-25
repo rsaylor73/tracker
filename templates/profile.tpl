@@ -3,12 +3,6 @@
     </header>
     <hr>
 
-    <div class="row top-buffer"><div class="col-sm-12">
-    <input type="button" value="Change State" class="btn btn-info btn-lg" onclick="document.location.href='/change_state'">&nbsp;Current State: {$state} 
-    {if $state eq ""}&nbsp;<font color="red">The default state is not set!</font>{/if}
-    <br>
-    </div></div>
-
     <form action="/index.php" method="post">
     <input type="hidden" name="section" value="update_profile">
     <div class="row top-buffer">

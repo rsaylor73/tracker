@@ -16,9 +16,7 @@
             <form name="myform1" style="display:inline">
             <input type="hidden" name="projectID" value="{$projectID}">
             <input type="hidden" name="label" value="Project #">
-            <input type="text" name="dotproject" value="{$dotproject}" class="form-control"
-            onblur="update_form(this.form)"
-            onchange="update_form(this.form)">
+            <input type="text" name="dotproject" value="{$dotproject}" class="form-control" disabled readonly>
             </form>
         </div>
         <div class="col-sm-3"><b>Sub Account:</b></div>
@@ -26,9 +24,7 @@
             <form name="myform2" style="display:inline">
             <input type="hidden" name="projectID" value="{$projectID}">
             <input type="hidden" name="label" value="Sub Account">
-            <input type="text" name="subaccount" value="{$subaccount}" class="form-control"
-            onblur="update_form(this.form)"
-            onchange="update_form(this.form)">
+            <input type="text" name="subaccount" value="{$subaccount}" class="form-control" disabled readonly>
             </form>
         </div>
     </div>
@@ -65,6 +61,20 @@
             </select>
             </form>
         </div>
+        <div class="col-sm-3">
+        {if $found_xml eq "1"}
+            <div class="alert alert-success">XML file loaded</div>
+        {else}
+            <div class="alert alert-danger">XML file not loaded</div>
+        {/if}
+        </div>
+        <div class="col-sm-3">
+        {if $pdf eq "1"}
+            <div class="alert alert-success">PDF file loaded</div>
+        {else}
+            <div class="alert alert-danger">PDF file not loaded</div>
+        {/if}        
+        </div>
     </div>
 
     <div class="row top-buffer">
@@ -94,7 +104,7 @@
     </div>
 
     <div class="row top-buffer">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <a data-toggle="modal" 
             style="text-decoration:none; color:#FFFFFF;"
             href="/upload_xml/{$reviewID}" 
@@ -102,7 +112,7 @@
             class="btn btn-primary btn-lg btn-block" 
             >Upload XML</a>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <a data-toggle="modal" 
             style="text-decoration:none; color:#FFFFFF;"
             href="/upload_pdf/{$reviewID}" 
@@ -110,7 +120,7 @@
             class="btn btn-info btn-lg btn-block" 
             >Upload PDF</a>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <a data-toggle="modal" 
             style="text-decoration:none; color:#FFFFFF;"
             href="/upload_cost/{$reviewID}" 
@@ -118,6 +128,12 @@
             class="btn btn-success btn-lg btn-block" 
             >Upload Cost Reduction</a>
         </div>
+
+        <div class="col-sm-3">
+            <input type="button" value="Delete Review" class="btn btn-danger btn-lg btn-block"
+            onclick="if(confirm('You are about to delete this review. Click OK to continue.')) {
+                document.location.href='/deletereview/{$reviewID}'
+            }">
     </div>
 
     <div class="row top-buffer">

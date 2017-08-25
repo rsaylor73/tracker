@@ -42,6 +42,7 @@ class dot_functions extends client_functions {
 			die;
 		}
 
+
 		$sql = "SELECT `stateID` FROM `state_access` WHERE `userID` = '$_SESSION[id]'";
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {

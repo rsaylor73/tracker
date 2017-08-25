@@ -8,7 +8,7 @@
 }
 </style>
 <form action="/" method="POST">
-<input type="hidden" name="section" value="view_report">
+<input type="hidden" name="section" value="client_view_report">
 <input type="hidden" name="dotID" value="{$dotID}">
 
     <div class="row">
@@ -41,7 +41,7 @@
             <input type="checkbox" name="p{$r.id}" value="checked" id="p{$r.id}" checked>
         </div>
         <div class="col-sm-2">
-            <a href="/view_project/{$r.id}">{$r.dotproject}</a>
+            <a href="/client_view_project/{$r.id}">{$r.dotproject}</a>
         </div>
         <div class="col-sm-2">
             {$r.subaccount}
@@ -52,15 +52,8 @@
         <div class="col-sm-2">
             {$r.description}
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             {$r.project_type}
-        </div>
-        <div class="col-sm-1">
-            <input type="button" value="Delete" class="btn btn-danger" onclick="
-            if(confirm('You are about to delete this project and all the reviews it is part of. Click OK to continue.')) {
-                    document.location.href='/deleteproject/{$r.id}'
-            }
-            ">
         </div>
     </div>
     {/foreach}

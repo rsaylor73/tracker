@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div class="col-sm-10">
-		<h3>Projects</h3>
+		<h3>Dashboard</h3>
 	</div>
 </div>
 

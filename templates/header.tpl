@@ -48,8 +48,22 @@
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
 
 
+
+<!-- Extra styles for this example -->
+<!-- Odometr includes -->
+<link rel="stylesheet" href="https://github.hubspot.com/odometer/themes/odometer-theme-car.css" />
+<script src="https://github.hubspot.com/odometer/odometer.js"></script>
+
+<style>
+.odometer {
+    font-size: 20px;
+}
+</style>
 </head>
 
 <body>
@@ -93,6 +107,7 @@ Show_Countdown();
                         <a href="/">Home</a>
                     </li>
                     {if $login ne "TRUE"}
+                    <!--
                     <li>
                         <a href="/projects">Projects</a>
                     </li>
@@ -100,6 +115,14 @@ Show_Countdown();
                     <li>
                         <a href="/users">Users</a>
                     </li>
+                    -->
+
+                    {if $admin eq "1"}
+                    <li>
+                        <a href="/users">Manage Users</a>
+                    </li>
+                    {/if}
+
                     <li>
                         <a href="/profile">Profile</a>
                     </li>

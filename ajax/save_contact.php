@@ -21,6 +21,8 @@ if ($logged == "TRUE") {
 	";
 	$result = $core->new_mysql($sql);
 
+	$contactID = $linkID->insert_id;
+
 	$sql = "
 	SELECT
 		`c`.`id`,
@@ -39,9 +41,28 @@ if ($logged == "TRUE") {
 	";
 	$result = $core->new_mysql($sql);
 	while ($row = $result->fetch_assoc()) {
-		$contacts .= "<option value=\"$row[id]\">$row[first] $row[last]</option>";
+		if ($row['id'] == $contactID) {
+			$contacts .= "<option selected value=\"$row[id]\">$row[first] $row[last]</option>";
+		} else {
+			$contacts .= "<option value=\"$row[id]\">$row[first] $row[last]</option>";
+		}
 	}
 
+
+	if ($_GET['mode'] == "view") {
+		$sql = "UPDATE `projects` SET `contactID` = '$contactID' WHERE `id` = '$_GET[projectID]'";
+		$result = $core->new_mysql($sql);
+
+	?>
+ 	<div class="row top-buffer">
+ 		<div class="col-sm-3"><b>Contact:</b></div>
+ 		<div class="col-sm-3" id="contacts">
+            <select name="contacts" class="form-control"><?=$contacts?></select>
+        </div>
+        <div class="col-sm-6"><input type="button" value="Add New" onclick="new_contact(this.form)" class="btn btn-primary"></div>
+    </div>
+    <?php
+	} else {
 	?>
  	<div class="row top-buffer">
  		<div class="col-sm-6">Contact:</div>
@@ -50,5 +71,6 @@ if ($logged == "TRUE") {
         </div>
         <div class="col-sm-2"><input type="button" value="Add New" onclick="new_contact(this.form)" class="btn btn-primary"></div>
     </div>
-    <?php
+    <?php		
+	}
 }

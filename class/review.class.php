@@ -31,6 +31,18 @@ class review_functions extends admin_functions {
 
 	}
 
+	public function deletereview() {
+
+		$this->check_permissions('newproject');
+		$sql = "DELETE FROM `review` WHERE `reviewID` = '$_GET[reviewID]'";
+		$result = $this->new_mysql($sql);
+
+		$sql = "DELETE FROM `xml_data` WHERE `reviewID` = '$_GET[reviewID]'";
+		$result = $this->new_mysql($sql);
+
+		print "<div class=\"alert alert-success\">The review was deleted. Click home to return to the homepage.</div>";
+	}
+
 	/* This is review but by project */
 	public function projects() {
 		$this->check_permissions('review');
@@ -125,6 +137,91 @@ class review_functions extends admin_functions {
 			`r`.`project_phase`,
 			`r`.`date_received`,
 			`r`.`date_completed`,
+			`r`.`pdf_file_client`,
+			`s`.`state`
+
+		FROM
+			`review` r, `projects` p, `dots` d, `state` s
+
+		WHERE
+			`r`.`reviewID` = '$_GET[reviewID]'
+			AND `r`.`projectID` = `p`.`id`
+			AND `p`.`dotID` = `d`.`id`
+			AND `d`.`stateID` = `s`.`state_id`
+		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			foreach ($row as $key=>$value) {
+				$data[$key] = $value;
+			}
+			if ($row['pdf_file_client'] != "") {
+				$data['pdf'] = "1";
+			}
+			// project phase
+			$data['SubmittalTypes'] = $this->getSubmittalTypes($row['project_phase'],$row['state']);
+			$reviewID = $row['reviewID'];
+			$projectID = $row['projectID'];
+		}
+
+		// get XML data
+		$dataview = $this->view_data($reviewID,$projectID,$search='');
+		$data['dataview'] = $dataview;
+
+		// charts
+		$found_data = "0";
+		$sql = "SELECT `series` FROM `xml_data` WHERE `projectID` = '$projectID' 
+		AND `reviewID` = '$reviewID' LIMIT 1";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$found_data = "1";
+		}
+		if ($found_data == "1") {
+			$data['found_xml'] = "1";
+			$cdata = $this->generate_stacked_data($projectID,$reviewID);
+			$chart_data = $cdata['chart_data'];
+			$chart_category = $cdata['chart_category'];
+			$stacked_column = $this->stacked_column('container1',$chart_category,'Comment Distribution','Distribution',$chart_data);
+			print "$stacked_column";
+
+			$chart_data = $this->generate_pie_data($projectID,$reviewID,'Category');
+			$pie2 = $this->pie_chart('container2','Categories',$chart_data);
+			print "$pie2";
+
+			$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Biddability');		
+			$pie3 = $this->pie_chart('container3','Biddability',$chart_data);
+			print "$pie3";
+
+			$chart_data = $this->generate_pie_data_special($projectID,$reviewID,'Comment_Type','Category','Constructability');		
+			$pie4 = $this->pie_chart('container4','Constructability',$chart_data);
+			print "$pie4";
+		} else {
+			$data['no_charts'] = "1";
+		}
+
+		$template = "review.tpl";
+		$dir = "/review";
+		$this->load_smarty($data,$template,$dir);
+	}
+
+
+	public function client_review() {
+		// page 9 from info sheet
+		if ($_SESSION['userType'] != "client") {
+			print "<div class=\"alert alert-danger\">Sorry, you do not have access.</div>";
+			die;
+		}
+
+		$sql = "
+		SELECT
+			`r`.`reviewID`,
+			`d`.`logo`,
+			`p`.`dotproject`,
+			`p`.`subaccount`,
+			`p`.`id` AS 'projectID',
+			`r`.`review_type`,
+			`r`.`project_phase`,
+			`r`.`date_received`,
+			`r`.`date_completed`,
 			`s`.`state`
 
 		FROM
@@ -185,6 +282,7 @@ class review_functions extends admin_functions {
 		$dir = "/review";
 		$this->load_smarty($data,$template,$dir);
 	}
+
 
 	private function generate_pie_data($projectID,$reviewID,$key) {
 		$sql = "SELECT DISTINCT `series` FROM `xml_data` WHERE `projectID` = '$projectID' 
@@ -252,6 +350,7 @@ class review_functions extends admin_functions {
 			$series = $row['series'];
 		}
 
+		$found = "0";
 		// get category data:
 		$sql = "
 		SELECT
@@ -272,6 +371,7 @@ class review_functions extends admin_functions {
 			$cat_sql .= "COUNT(CASE WHEN `$key` = '".$row[$key]."' 
 			THEN `$key` END) AS '".$row[$key]."',";
 			$categories[] = $row[$key];
+			$found = "1";
 		}
 		$cat_sql = substr($cat_sql, 0,-1);
 
@@ -290,15 +390,19 @@ class review_functions extends admin_functions {
 			AND `x`.`Category` != ''
 			AND `x`.`$key2` = '$search'
 		";
-		$result = $this->new_mysql($sql);
-		while ($row = $result->fetch_assoc()) {
-			foreach ($categories as $key=>$value) {
-				$chart_data .= "{name: '".$value."',y: ".$row[$value]."},";
+		if ($found == "1") {
+			$result = $this->new_mysql($sql);
+			while ($row = $result->fetch_assoc()) {
+				foreach ($categories as $key=>$value) {
+					$chart_data .= "{name: '".$value."',y: ".$row[$value]."},";
+				}
 			}
+			$chart_data = substr($chart_data,0,-1);
 		}
-		$chart_data = substr($chart_data,0,-1);
 		return($chart_data);
 	}
+
+
 	private function generate_stacked_data($projectID,$reviewID) {
 
 		$sql = "SELECT DISTINCT `series` FROM `xml_data` WHERE `projectID` = '$projectID' 
@@ -364,7 +468,7 @@ class review_functions extends admin_functions {
 	public function open_review() {
 		$this->check_permissions('review');
 		$data['dotID'] = $_GET['dotID'];
-		$sql = "SELECT `id`,`dotproject` FROM `projects` WHERE `dotID` = '$_GET[dotID]'";
+		$sql = "SELECT `id`,`dotproject` FROM `projects` WHERE `dotID` = '$_GET[dotID]' ORDER BY `dotproject` ASC";
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {
 			$options .= "<option value=\"$row[id]\">$row[dotproject]</option>";
@@ -542,13 +646,19 @@ class review_functions extends admin_functions {
 
 	private function process_xml($reviewID,$projectID,$xml_file) {
 
-		// get sequence number
+		// get sequence number (no longer supported)
+		/*
 		$sql = "SELECT DISTINCT `series` FROM `xml_data` WHERE `projectID` = '$projectID' AND `reviewID` = '$reviewID' ORDER BY `series` DESC LIMIT 1";
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {
 			$series = $row['series'];
 		}
 		$series = $series + 1;
+		*/
+		$series = "1"; // old
+
+		$sql = "DELETE FROM `xml_data` WHERE `projectID` = '$projectID' AND `reviewID` = '$reviewID'";
+		$result = $this->new_mysql($sql);
 
 		$xml=simplexml_load_file("../uploads/$xml_file");
 		foreach ($xml->Markup as $dot) {
@@ -576,8 +686,6 @@ class review_functions extends admin_functions {
 	}
 
 	public function view_data($reviewID,$projectID,$search='') {
-		$this->check_permissions('review');	
-
 		// get latest series #
 		$series = "";
 		$sql = "
