@@ -106,7 +106,6 @@ class review_functions extends admin_functions {
 		if ($result == "TRUE") {
 			$reviewID = $this->linkID->insert_id;
 			print "<div class=\"alert alert-success\">The review was added. Loading...</div>";
-			$result = $this->new_mysql($sql);
 			$redirect = "/review/" . $reviewID;
 			?>
 			<script>
@@ -116,6 +115,7 @@ class review_functions extends admin_functions {
 			,2000);
 			</script>
 			<?php
+
 		} else {
 			print "<div class=\"alert alert-danger\">The review failed to add.</div>";
 		}

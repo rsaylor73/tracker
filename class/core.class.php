@@ -358,7 +358,7 @@ class core {
 
                     {
                         type: 'pie',
-                        name: 'Total consumption',
+                        name: 'Total Comments',
                         data: [
                         ";
 
@@ -462,7 +462,7 @@ chart1 = Highcharts.chart('$container', {
             rotation: 'auto'
         },
         title: {
-            text: 'km/h'
+            text: 'Reviews'
         },
         plotBands: [{
             from: 0,
@@ -480,10 +480,10 @@ chart1 = Highcharts.chart('$container', {
     },
 
     series: [{
-        name: 'Speed',
+        name: 'Completed',
         data: [$value],
         tooltip: {
-            valueSuffix: ' km/h'
+            valueSuffix: ' Reviews'
         }
     }]
 

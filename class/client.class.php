@@ -77,21 +77,29 @@ class client_functions extends JWT {
 		}
 
 		// get total comments
+
 		$sql = "
 		SELECT
-			COUNT(`x`.`Comments`) AS 'total'
+			`r`.*
 
 		FROM
-			`projects` p,
-			`review` r,
-			`xml_data` x
+			`projects` p, `review` r
 
 		WHERE
 			`p`.`dotID` = '$dotID'
 			AND `p`.`id` = `r`.`projectID`
 			AND DATE_FORMAT(`r`.`date_received`,'%Y') = '$year'
-			AND `p`.`id` = `x`.`projectID`	
 		";
+		$result = $this->new_mysql($sql);
+		while ($row = $result->fetch_assoc()) {
+			$reviewID .= "$row[reviewID],";
+		}
+		$reviewID = substr($reviewID,0,-1);
+		$sql = "
+		SELECT COUNT(`Comments`) AS 'total' FROM `xml_data` WHERE `reviewID` IN ($reviewID)
+		";
+
+
 		$result = $this->new_mysql($sql);
 		while ($row = $result->fetch_assoc()) {
 			$total_comments = $row['total'];
@@ -754,7 +762,7 @@ class client_functions extends JWT {
 
 	}
 
-	private function client_dashboard_graphs_category($dotID) {
+	public function client_dashboard_graphs_category($dotID) {
 
 		$year = date("Y");
 		$sql = "
@@ -846,7 +854,7 @@ class client_functions extends JWT {
 
 
 
-	private function client_dashboard_graphs_discipline($dotID) {
+	public function client_dashboard_graphs_discipline($dotID) {
 
 		$year = date("Y");
 		$sql = "

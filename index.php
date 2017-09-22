@@ -52,6 +52,18 @@ switch ($section) {
         if ($_SESSION['groupID'] == "1") {
                 $smarty->assign('admin','1');
         }
+
+        if ($_SESSION['userType'] == 'staff') {
+                $smarty->assign('account','staff');
+                if ($_GET['section'] == "manage_dot") {
+                        $smarty->assign('dashboard',$_GET['id']);
+                } else {
+                        $smarty->assign('dashboard',$_SESSION['dot_dashboard']);
+                }
+        } else {
+                $smarty->assign('account','client');
+        }
+
         $smarty->display('header.tpl');
         break;
 }

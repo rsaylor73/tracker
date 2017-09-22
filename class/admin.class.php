@@ -147,7 +147,8 @@ class admin_functions extends users_functions {
 			$sql_pw = ",`password` = '$hash'";
 		}
 		$sql = "UPDATE `users` SET `first` = '$_POST[first]', `last` = '$_POST[last]', 
-		`email` = '$_POST[email]', `userType` = '$_POST[userType]' $sql_pw WHERE `id` = '$_POST[id]'";
+		`email` = '$_POST[email]', `userType` = '$_POST[userType]', `groupID` = '$_POST[groupID]'
+		 $sql_pw WHERE `id` = '$_POST[id]'";
 		$result = $this->new_mysql($sql);
 		if ($result == "TRUE") {
 			print "<div class=\"alert alert-success\">The user was updated. Loading...</div>";

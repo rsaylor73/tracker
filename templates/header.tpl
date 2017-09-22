@@ -56,8 +56,10 @@
 
 <!-- Extra styles for this example -->
 <!-- Odometr includes -->
-<link rel="stylesheet" href="https://github.hubspot.com/odometer/themes/odometer-theme-car.css" />
-<script src="https://github.hubspot.com/odometer/odometer.js"></script>
+<link rel="stylesheet" href="/css/odometer-theme-car.css" />
+<script src="/js/odometer.js"></script>
+
+<script src="/js/sorttable.js"></script>
 
 <style>
 .odometer {
@@ -104,7 +106,13 @@ Show_Countdown();
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="/">Home</a>
+                        <a href="/">
+                        {if $account eq "staff"}
+                        Home
+                        {else}
+                        Dashboard
+                        {/if}
+                        </a>
                     </li>
                     {if $login ne "TRUE"}
                     <!--
@@ -116,6 +124,10 @@ Show_Countdown();
                         <a href="/users">Users</a>
                     </li>
                     -->
+
+                    {if $account eq "staff"}
+                        <li><a href="/dots/{$dashboard}">Dashboard</a></li>
+                    {/if}
 
                     {if $admin eq "1"}
                     <li>

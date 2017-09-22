@@ -22,54 +22,68 @@
         </div>
     </div>
 
-    <div class="row top-buffer">
-        <div class="col-sm-1">
-            <input type="button" value="Toggle" class="btn btn-warning" id="mybutton">
-        </div>
-        <div class="col-sm-2"><b>DOT Project #</b></div>
-        <div class="col-sm-2"><b>Sub Account</b></div>
-        <div class="col-sm-2"><b>Region/District</b></div>
-        <div class="col-sm-2"><b>Project Description</b></div>
-        <div class="col-sm-2"><b>Project Type</b></div>
-        <div class="col-sm-1"><input type="submit" value="Report" class="btn btn-success btn-block"></div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover sortable">
+            <thead>
+                <tr>
+                    <th>
+                    <span class="btn btn-warning">
+                    <input type="checkbox" id="checkAll" class="checkAll" checked > Toggle
+                    </span>
+                    </th>
+                    <th><b>DOT Project #</b></th>
+                    <th><b>Sub Account</b></th>
+                    <th><b>Region/District</b></th>
+                    <th width="250"><b>Project Description</b></th>
+                    <th><b>Project Type</b></th>
+                    <th><input type="submit" value="Report" class="btn btn-success btn-block"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {foreach $results as $r}
+            <tr>
+                <td>
+                    <input type="checkbox" name="p{$r.id}" value="checked" class="checkItem" id="p{$r.id}" checked>
+                </td>
+                <td>
+                    <a href="/view_project/{$r.id}">{$r.dotproject}</a>
+                </td>
+                <td>
+                    {$r.subaccount}
+                </td>
+                <td>
+                    {$r.region_name}
+                </td>
+                <td>
+                    {$r.description}
+                </td>
+                <td>
+                    {$r.project_type}
+                </td>
+                <td>
+                    <input type="button" value="Delete" class="btn btn-danger" onclick="
+                    if(confirm('You are about to delete this project and all the reviews it is part of. Click OK to continue.')) {
+                            document.location.href='/deleteproject/{$r.id}'
+                    }
+                    ">
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
     </div>
 
-
-    {foreach $results as $r}
-    <div class="row top-buffer row-striped">
-        <div class="col-sm-1">
-            <input type="checkbox" name="p{$r.id}" value="checked" id="p{$r.id}" checked>
-        </div>
-        <div class="col-sm-2">
-            <a href="/view_project/{$r.id}">{$r.dotproject}</a>
-        </div>
-        <div class="col-sm-2">
-            {$r.subaccount}
-        </div>
-        <div class="col-sm-2">
-            {$r.region_name}
-        </div>
-        <div class="col-sm-2">
-            {$r.description}
-        </div>
-        <div class="col-sm-2">
-            {$r.project_type}
-        </div>
-        <div class="col-sm-1">
-            <input type="button" value="Delete" class="btn btn-danger" onclick="
-            if(confirm('You are about to delete this project and all the reviews it is part of. Click OK to continue.')) {
-                    document.location.href='/deleteproject/{$r.id}'
-            }
-            ">
-        </div>
-    </div>
-    {/foreach}
 </form>
 
 <script>
+
 $('#mybutton').click(function(e) {
     $(':checkbox').each(function(i,item){
         $(item).attr('checked', !$(item).is(':checked'));
     });
 });
+
+$('.checkAll').click(function () {    
+    $(':checkbox.checkItem').prop('checked', this.checked);    
+ });
 </script>
