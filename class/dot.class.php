@@ -173,14 +173,15 @@ class dot_functions extends client_functions {
 			$reviewID .= "$row[reviewID],";
 		}
 		$reviewID = substr($reviewID,0,-1);
-		$sql = "
-		SELECT COUNT(`Comments`) AS 'total' FROM `xml_data` WHERE `reviewID` IN ($reviewID)
-		";
+		if ($reviewID != "") {
+			$sql = "
+			SELECT COUNT(`Comments`) AS 'total' FROM `xml_data` WHERE `reviewID` IN ($reviewID)
+			";
 
-
-		$result = $this->new_mysql($sql);
-		while ($row = $result->fetch_assoc()) {
-			$total_comments = $row['total'];
+			$result = $this->new_mysql($sql);
+			while ($row = $result->fetch_assoc()) {
+				$total_comments = $row['total'];
+			}
 		}
 
 		$len = strlen($total_comments);
